@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antonio Pérez Velasco (pereza) | Climate & Weather AI Engineer</title>
+    <meta name="description" content="Personal blog and portfolio of Antonio Pérez Velasco (pereza), Senior Software & Data Engineer at Predictia, specialized in meteorological and climate data workflows using deep learning.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Interactive Storm Background Canvas -->
+    <canvas id="storm-canvas"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-accent">pereza</span><span class="logo-dot">.</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#about" class="nav-link active">About</a>
+                <a href="#experience" class="nav-link">Experience</a>
+                <a href="#projects" class="nav-link">Projects & Papers</a>
+                <a href="#blog" class="nav-link">Blog & Feed</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="theme-btn" aria-label="Toggle light/dark theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="mobile-nav-toggle" aria-label="Toggle mobile menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer">
+        <nav class="mobile-nav-links">
+            <a href="#about" class="mobile-link">About</a>
+            <a href="#experience" class="mobile-link">Experience</a>
+            <a href="#projects" class="mobile-link">Projects & Papers</a>
+            <a href="#blog" class="mobile-link">Blog & Feed</a>
+            <a href="#contact" class="mobile-link">Contact</a>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section">
+            <div class="section-container">
+                <div class="hero-content">
+                    <div class="badge-container">
+                        <span class="hero-badge"><i class="fa-solid fa-cloud-sun-rain"></i> AI & Climate Scientist</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Antonio Pérez Velasco
+                    </h1>
+                    <h2 class="hero-subtitle">
+                        Senior Software & Data Engineer <span class="text-accent">@ Predictia</span>
+                    </h2>
+                    <p class="hero-description">
+                        Specialized in meteorological and climate data workflows. Building robust pipelines for massive geospatial datasets, developing deep learning emulators, and bridging the gap between physics-based modeling and machine learning.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#blog" class="btn btn-primary">
+                            Explore Literature Aggregator <i class="fa-solid fa-arrow-trend-up"></i>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary">
+                            Get in Touch <i class="fa-solid fa-envelope"></i>
+                        </a>
+                    </div>
+                    <div class="hero-socials">
+                        <a href="https://linkedin.com/in/antonio-perez-velasco-234a3a167" target="_blank" rel="noopener" class="social-link" title="LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://github.com/ECMWFCode4Earth" target="_blank" rel="noopener" class="social-link" title="GitHub">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                        <a href="mailto:aperez@predictia.es" class="social-link" title="Email">
+                            <i class="fa-solid fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="globe-container">
+                        <!-- Orbiting wireframe paths and satellites representing global climate mapping -->
+                        <div class="globe-mesh">
+                            <div class="globe-line line-h"></div>
+                            <div class="globe-line line-v"></div>
+                            <div class="satellite orbit-1"></div>
+                            <div class="satellite orbit-2"></div>
+                        </div>
+                        <div class="profile-avatar-wrapper">
+                            <img src="avatar.png" alt="Antonio Pérez Velasco" class="profile-avatar">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Me & Skills Section -->
+        <section id="about" class="about-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 class="section-title">About Me</h2>
+                    <p class="section-subtitle">Bridging atmospheric science and high-performance computing</p>
+                </div>
+                <div class="about-grid">
+                    <div class="about-text-card">
+                        <h3>Work-life Summary</h3>
+                        <p>
+                            I am a Software and Data Engineer specialized in meteorological and climate data workflows. I design and implement robust pipelines for data acquisition, homogenization, transformation, and quality control using Python. 
+                        </p>
+                        <p>
+                            My expertise covers handling large-scale geospatial datasets (NetCDF, GRIB, Zarr), developing containerized services in operational environments (Docker, Kubernetes), and ensuring data interoperability. I work deeply on the modeling of forecasting and spatio-temporal downscaling tasks, evaluating the performance of both physics-based (NWP) and machine-learned outputs.
+                        </p>
+                        <div class="bio-details">
+
+
+                            <div class="bio-item">
+                                <span class="bio-label">Languages:</span>
+                                <span class="bio-value">Spanish (Native) | English (C1 Cambridge)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skills-card">
+                        <h3>Technical Skills</h3>
+                        <div class="skills-wrapper">
+                            <div class="skill-group">
+                                <h4>Data & Processing</h4>
+                                <div class="skill-tags">
+                                    <span>Python</span>
+                                    <span>Bash</span>
+                                    <span>Xarray</span>
+                                    <span>Dask</span>
+                                    <span>Pandas</span>
+                                    <span>NumPy</span>
+                                    <span>NetCDF</span>
+                                    <span>GRIB</span>
+                                    <span>Zarr</span>
+                                    <span>SQL</span>
+                                    <span>R</span>
+                                </div>
+                            </div>
+                            <div class="skill-group">
+                                <h4>Machine Learning & Modeling</h4>
+                                <div class="skill-tags">
+                                    <span>PyTorch</span>
+                                    <span>TensorFlow</span>
+                                    <span>PyTorch Lightning</span>
+                                    <span>Anemoi (ECMWF)</span>
+                                    <span>Scikit-learn</span>
+                                    <span>xskillscore</span>
+                                </div>
+                            </div>
+                            <div class="skill-group">
+                                <h4>DevOps & HPC</h4>
+                                <div class="skill-tags">
+                                    <span>Docker</span>
+                                    <span>Kubernetes</span>
+                                    <span>Argo Workflows</span>
+                                    <span>SLURM</span>
+                                    <span>GitHub Actions</span>
+                                    <span>S3 Stores</span>
+                                </div>
+                            </div>
+                            <div class="skill-group">
+                                <h4>Geospatial Tools</h4>
+                                <div class="skill-tags">
+                                    <span>Cartopy</span>
+                                    <span>GDAL</span>
+                                    <span>PyProj</span>
+                                    <span>CDO / NCO</span>
+                                    <span>ecCodes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="academic-timeline">
+                    <h3 class="timeline-title">Academic Background</h3>
+                    <div class="timeline">
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date">2019 — 2020</div>
+                            <div class="timeline-content">
+                                <h4>Master of Science in Data Science (ML Specialization)</h4>
+                                <p class="institution">University of Cantabria & Menéndez Pelayo International University</p>
+                                <p class="details">Thesis: Use of deep-learning techniques for precipitation nowcasting. Grade: 9.18 / 10.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date">2018 — 2019</div>
+                            <div class="timeline-content">
+                                <h4>Exchange Program in Physics</h4>
+                                <p class="institution">University of Texas at Austin, USA</p>
+                                <p class="details">International exchange year completing advanced courses in Physics. Grade: 3.74 / 4 (A-).</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date">2015 — 2019</div>
+                            <div class="timeline-content">
+                                <h4>Bachelor of Science in Physics (Applied Physics)</h4>
+                                <p class="institution">University of Cantabria, Spain</p>
+                                <p class="details">Specialization in Applied Physics. Grade: 8.02 / 10.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="experience-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 class="section-title">Industrial Experience</h2>
+                    <p class="section-subtitle">Translating complex scientific requirements into production-ready software solutions</p>
+                </div>
+                
+                <div class="experience-card">
+                    <div class="exp-header">
+                        <div class="exp-role-company">
+                            <h3>Senior Software Engineer</h3>
+                            <a href="http://www.predictia.es/" target="_blank" rel="noopener" class="company-link">Predictia Intelligent Data Solutions S.L.</a>
+                        </div>
+                        <span class="exp-date"><i class="fa-solid fa-calendar-days"></i> June 2019 — Present</span>
+                    </div>
+                    <p class="exp-location"><i class="fa-solid fa-location-dot"></i> Santander, Cantabria, Spain (Hybrid)</p>
+                    <ul class="exp-bullets">
+                        <li>
+                            <div class="bullet-icon"><i class="fa-solid fa-gears"></i></div>
+                            <div class="bullet-text"><strong>Climate Data Pipelines:</strong> Led the development of climate-related datasets through multi-source data download, homogenization, bias adjustment, and index computation. Built automated Python pipelines containerized with Docker and orchestrated with Kubernetes. Optimized data chunking with Xarray, Dask, and Pandas.</div>
+                        </li>
+                        <li>
+                            <div class="bullet-icon"><i class="fa-solid fa-brain"></i></div>
+                            <div class="bullet-text"><strong>Machine Learning Research & Modeling:</strong> Built and deployed machine learning architectures (RNN, CNN, LSTM, GAN, Transformers, Diffusion models) using PyTorch, tracking experiments via MLFlow. Applied to bias correction, subseasonal forecasting, NWP (AIFS model using the Anemoi framework), and spatial downscaling.</div>
+                        </li>
+                        <li>
+                            <div class="bullet-icon"><i class="fa-solid fa-chart-line"></i></div>
+                            <div class="bullet-text"><strong>Model Evaluation & Visualization:</strong> Designed and implemented validation pipelines utilizing xskillscore to evaluate spatial and temporal accuracy metrics. Generated publication-quality spatial map visualizations using Cartopy, Matplotlib, and Seaborn.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects and Publications Section -->
+        <section id="projects" class="projects-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 class="section-title">Projects & Publications</h2>
+                    <p class="section-subtitle">Academic research contributions and open-source packages</p>
+                </div>
+
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-icon"><i class="fa-brands fa-github"></i></div>
+                        <h3>ECMWF aq-biascorrection</h3>
+                        <p>Bias correction of CAMS air quality forecasts by combining in-situ observations with Deep Learning techniques. Developed during ECMWF Code4Earth.</p>
+                        <div class="project-tags">
+                            <span>PyTorch</span>
+                            <span>CAMS Data</span>
+                            <span>Air Quality</span>
+                        </div>
+                        <a href="https://github.com/ECMWFCode4Earth/aq-biascorrection" target="_blank" rel="noopener" class="project-link">View Repository <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-icon"><i class="fa-brands fa-github"></i></div>
+                        <h3>DeepR (ECMWF Code4Earth)</h3>
+                        <p>A library dedicated to deep learning models for climate downscaling, emulating regional reanalysis models from global scale datasets.</p>
+                        <div class="project-tags">
+                            <span>Deep Learning</span>
+                            <span>Downscaling</span>
+                            <span>PyTorch Lightning</span>
+                        </div>
+                        <a href="https://github.com/ECMWFCode4Earth/DeepR" target="_blank" rel="noopener" class="project-link">View Repository <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+
+                <div class="publications-wrapper">
+                    <h3>Published Papers & Congresses</h3>
+                    <div class="publications-list" id="papers-list">
+                        <!-- Dynamically generated list from paper index or hardcoded static links for high performance -->
+                        
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2024</span>
+                                <span class="pub-badge">arXiv</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">Transformer based super-resolution downscaling for regional reanalysis: Full domain vs tiling approaches</h4>
+                                <p class="pub-authors"><strong>Pérez, A.</strong>, Cruz, M. S., Martín, D. S., & Gutiérrez, J. M. (2024).</p>
+                                <a href="https://doi.org/10.48550/arXiv.2410.12728" target="_blank" rel="noopener" class="pub-doi"><i class="fa-solid fa-link"></i> DOI: 10.48550/arXiv.2410.12728</a>
+                            </div>
+                        </div>
+
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2024</span>
+                                <span class="pub-badge">EGU Assembly</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">Testing the use of deep learning techniques for emulating regional reanalysis</h4>
+                                <p class="pub-authors"><strong>Pérez, A.</strong>, Santa Cruz, M., Diez-Sierra, J., Chantry, M., Horányi, A., Clare, M., & Soci, C. (2024). EGU24-3540.</p>
+                                <a href="https://doi.org/10.5194/egusphere-egu24-3540" target="_blank" rel="noopener" class="pub-doi"><i class="fa-solid fa-link"></i> DOI: 10.5194/egusphere-egu24-3540</a>
+                            </div>
+                        </div>
+
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2023</span>
+                                <span class="pub-badge">Theoretical Climatology</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">Local-scale regionalisation of climate change effects on rainfall pattern: Application to Alicante City (Spain)</h4>
+                                <p class="pub-authors">Cutillas-Lozano, L. G., López, M. S. C., Velasco, A. P. (<strong>Pérez, A.</strong>), Andrés-Doménech, I., & Olcina-Cantos, J. (2023).</p>
+                                <a href="https://doi.org/10.1007/s00704-023-04565-3" target="_blank" rel="noopener" class="pub-doi"><i class="fa-solid fa-link"></i> DOI: 10.1007/s00704-023-04565-3</a>
+                            </div>
+                        </div>
+
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2022</span>
+                                <span class="pub-badge">AEC</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">Climadjust: an operational service to adjust biases in climate projections</h4>
+                                <p class="pub-authors">Sáenz de la Torre, J. J., Suárez Peña, E., Iglesias Sánchez, D., Sánchez Rodríguez, I. L., <strong>Pérez Velasco, A.</strong>, Tuni, M., ... & Gutiérrez, J. M. (2022).</p>
+                                <span class="pub-no-doi"><i class="fa-solid fa-book"></i> Asociación Española de Climatología</span>
+                            </div>
+                        </div>
+
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2022</span>
+                                <span class="pub-badge">EGU Assembly</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">A Deep Learning approach to de-bias Air Quality forecasts, using heterogeneous Open Data sources as reference</h4>
+                                <p class="pub-authors"><strong>Pérez, A.</strong>, Santa Cruz, M., Flemming, J., & Razinger, M. (2022). EGU22-1255.</p>
+                                <a href="https://doi.org/10.5194/egusphere-egu22-1255" target="_blank" rel="noopener" class="pub-doi"><i class="fa-solid fa-link"></i> DOI: 10.5194/egusphere-egu22-1255</a>
+                            </div>
+                        </div>
+
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2022</span>
+                                <span class="pub-badge">Data Science Journal</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">Quality management framework for climate datasets</h4>
+                                <p class="pub-authors">Lacagnina, C., Doblas-Reyes, F., Larnicol, G., Buontempo, C., Obregón, A., ... & <strong>Pérez-Zanón, N.</strong> (2022).</p>
+                                <a href="http://doi.org/10.5334/dsj-2022-010" target="_blank" rel="noopener" class="pub-doi"><i class="fa-solid fa-link"></i> DOI: 10.5334/dsj-2022-010</a>
+                            </div>
+                        </div>
+
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2022</span>
+                                <span class="pub-badge">BAMS</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">The worldwide C3S CORDEX grand ensemble: A major contribution to assess regional climate change in the IPCC AR6 Atlas</h4>
+                                <p class="pub-authors">Diez-Sierra, J., Iturbide, M., Gutiérrez, J. M., Fernández, J., Milovac, J., Cofiño, A. S., ... & <strong>Pérez, A.</strong> (2022).</p>
+                                <a href="https://doi.org/10.1175/BAMS-D-22-0111.1" target="_blank" rel="noopener" class="pub-doi"><i class="fa-solid fa-link"></i> DOI: 10.1175/BAMS-D-22-0111.1</a>
+                            </div>
+                        </div>
+
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2021</span>
+                                <span class="pub-badge">EGU Assembly</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">Climadjust: easing the Bias Adjustment process through a user-friendly web service</h4>
+                                <p class="pub-authors">Sáenz de la Torre, J. J., Suárez, E., Iglesias, D., Sánchez, I., <strong>Pérez, A.</strong>, Tuni, M., ... & Gutiérrez, J. M. (2021). EGU21-10674.</p>
+                                <a href="https://doi.org/10.5194/egusphere-egu21-10674" target="_blank" rel="noopener" class="pub-doi"><i class="fa-solid fa-link"></i> DOI: 10.5194/egusphere-egu21-10674</a>
+                            </div>
+                        </div>
+
+                        <div class="pub-item">
+                            <div class="pub-meta">
+                                <span class="pub-year">2020</span>
+                                <span class="pub-badge">Master Thesis</span>
+                            </div>
+                            <div class="pub-details">
+                                <h4 class="pub-title">Predicción de lluvia a muy corto plazo mediante el uso de técnicas de aprendizaje profundo</h4>
+                                <p class="pub-authors"><strong>Pérez Velasco, A.</strong> (2020).</p>
+                                <a href="http://hdl.handle.net/10902/20796" target="_blank" rel="noopener" class="pub-doi"><i class="fa-solid fa-link"></i> HDL: 10902/20796</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog & Weekly Lit Aggregator Section -->
+        <section id="blog" class="blog-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 class="section-title">Blog & Literature Feed</h2>
+                    <p class="section-subtitle">Weekly aggregated research papers and thoughts on weather, climate, and AI</p>
+                </div>
+
+                <div class="blog-controls">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search papers, authors, abstracts...">
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="blog">Blog Posts</button>
+                        <button class="filter-btn" data-filter="weather">Weather Forecasting</button>
+                        <button class="filter-btn" data-filter="s2s">S2S Forecasting</button>
+                        <button class="filter-btn" data-filter="emulation">Climate Emulation</button>
+                        <button class="filter-btn" data-filter="assimilation">Data Assimilation</button>
+                        <button class="filter-btn" data-filter="downscaling">Downscaling</button>
+                    </div>
+                </div>
+
+                <div class="blog-grid-feed" id="blog-feed">
+                    <!-- Loaded dynamically via app.js -->
+                    <div class="loading-state">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i> Loading latest papers and posts...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <p class="section-subtitle">Have a question or looking to collaborate? Drop a message!</p>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3>Contact Information</h3>
+                        <p class="contact-desc">
+                            Feel free to reach out via email or connect with me on LinkedIn. I am always open to discussing new research, open-source projects, and computational geoscience.
+                        </p>
+                        
+                        <div class="contact-methods">
+                            <div class="contact-item">
+                                <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+                                <div class="contact-text">
+                                    <span class="label">Email</span>
+                                    <a href="mailto:aperez@predictia.es" class="value">aperez@predictia.es</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon"><i class="fa-brands fa-linkedin"></i></div>
+                                <div class="contact-text">
+                                    <span class="label">LinkedIn</span>
+                                    <a href="https://linkedin.com/in/antonio-perez-velasco-234a3a167" target="_blank" rel="noopener" class="value">linkedin.com/in/antonio-perez-velasco</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-wrapper">
+                        <h3>Send a Quick Message</h3>
+                        <!-- Form submits via standard mailto as a static client-side fallback -->
+                        <form id="contact-form" action="mailto:aperez@predictia.es" method="GET" enctype="text/plain">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="form-name">Name</label>
+                                    <input type="text" id="form-name" name="name" required placeholder="Your Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="form-email">Email</label>
+                                    <input type="email" id="form-email" name="email" required placeholder="your.email@example.com">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="form-subject">Subject</label>
+                                <input type="text" id="form-subject" name="subject" required placeholder="Subject Topic">
+                            </div>
+                            <div class="form-group">
+                                <label for="form-message">Message</label>
+                                <textarea id="form-message" name="body" rows="5" required placeholder="Hi Antonio, I saw your website and..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-submit">
+                                Send Message <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Detailed Post/Paper View -->
+    <div class="modal" id="post-modal" aria-hidden="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
+            <button class="modal-close" id="modal-close-btn" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-content" id="modal-body">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 Antonio Pérez Velasco. All rights reserved.</p>
+            <p class="footer-meta">AI-Geoscience Literature Aggregator updated automatically weekly.</p>
+        </div>
+    </footer>
+
+    <!-- Custom JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+name: Weekly Blog Paper Aggregation
+
+on:
+  schedule:
+    # Run every Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+    # Allow manual triggering from GitHub UI
+
+jobs:
+  update-papers:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allow workflow to commit changes back to repo
+      
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: v0.68.1
+          cache-key: pixi-cache-v1
+
+      - name: Run Paper Compiler
+        run: |
+          export PYTHONPATH="."
+          pixi run -e dev compile
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Stage changes
+          git add data/posts.json
+          
+          # Only commit and push if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: automated weekly update of AI-geoscience papers"
+            git push
+          else
+            echo "No new papers or blog changes found. Skipping commit."
+          fi
