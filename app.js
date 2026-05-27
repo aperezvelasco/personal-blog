@@ -370,36 +370,49 @@ document.addEventListener("DOMContentLoaded", () => {
             const isOrange = Math.random() > 0.4;
             const baseColor = isOrange ? "rgba(232, 119, 34, " : "rgba(242, 242, 242, ";
             const baseOpacity = isOrange ? (Math.random() * 0.35 + 0.2) : (Math.random() * 0.2 + 0.15);
+            const startX = randomStart ? Math.random() * width : -10;
+            const startY = Math.random() * height;
             return {
-                x: randomStart ? Math.random() * width : -10,
-                y: Math.random() * height,
+                x: startX,
+                y: startY,
+                prevX: startX,
+                prevY: startY,
                 vx: speed * 1.2,
                 vy: (Math.random() - 0.5) * 0.3,
                 speed: speed,
                 size: Math.random() * 1.8 + 0.6,
                 baseColor: baseColor,
-                baseOpacity: baseOpacity,
-                history: []
+                baseOpacity: baseOpacity
             };
         }
+
+        let lastTheme = document.documentElement.getAttribute("data-theme") || "dark";
 
         // Main Animation Frame
         function animate() {
             requestAnimationFrame(animate);
 
-            // Clear canvas completely to keep background clean and avoid orange haze buildup
             const theme = document.documentElement.getAttribute("data-theme") || "dark";
-            const bgClearColor = theme === "dark" ? "#070401" : "#F2F2F2";
             
-            ctx.fillStyle = bgClearColor;
+            // If theme changed, clear canvas to avoid old artifacts
+            if (theme !== lastTheme) {
+                ctx.clearRect(0, 0, width, height);
+                lastTheme = theme;
+            }
+
+            // Gradually fade out previous drawings using destination-out
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
             ctx.fillRect(0, 0, width, height);
+            
+            // Restore default composite operation to draw new particles
+            ctx.globalCompositeOperation = "source-over";
 
             // Update and draw particles
             particles.forEach((p, index) => {
-                p.history.push({ x: p.x, y: p.y });
-                if (p.history.length > 8) {
-                    p.history.shift();
-                }
+                // Store previous position before update
+                p.prevX = p.x;
+                p.prevY = p.y;
 
                 // Apply wind flow
                 p.vx += (p.speed * 0.02);
@@ -438,22 +451,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 p.x += p.vx;
                 p.y += p.vy;
 
-                // Draw vector streak trails with progressive fading in opacity and size
-                if (p.history.length > 1) {
-                    for (let step = 1; step < p.history.length; step++) {
-                        const pt1 = p.history[step - 1];
-                        const pt2 = p.history[step];
-                        const fadeRatio = step / p.history.length;
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(pt1.x, pt1.y);
-                        ctx.lineTo(pt2.x, pt2.y);
-                        ctx.strokeStyle = p.baseColor + (p.baseOpacity * fadeRatio) + ")";
-                        ctx.lineWidth = p.size * (0.3 + 0.7 * fadeRatio);
-                        ctx.lineCap = "round";
-                        ctx.stroke();
-                    }
-                }
+                // Draw line from previous position to current position
+                ctx.beginPath();
+                ctx.moveTo(p.prevX, p.prevY);
+                ctx.lineTo(p.x, p.y);
+                ctx.strokeStyle = p.baseColor + p.baseOpacity + ")";
+                ctx.lineWidth = p.size;
+                ctx.lineCap = "round";
+                ctx.stroke();
 
                 // Recycle offscreen wind streaks
                 if (p.x > width + 20 || p.y < -20 || p.y > height + 20) {
