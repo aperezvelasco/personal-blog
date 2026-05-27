@@ -367,6 +367,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function createParticle(randomStart = false) {
             const speed = Math.random() * 1.5 + 0.6;
+            const isOrange = Math.random() > 0.4;
+            const baseColor = isOrange ? "rgba(232, 119, 34, " : "rgba(242, 242, 242, ";
+            const baseOpacity = isOrange ? (Math.random() * 0.35 + 0.2) : (Math.random() * 0.2 + 0.15);
             return {
                 x: randomStart ? Math.random() * width : -10,
                 y: Math.random() * height,
@@ -374,10 +377,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 vy: (Math.random() - 0.5) * 0.3,
                 speed: speed,
                 size: Math.random() * 1.8 + 0.6,
-                opacity: Math.random() * 0.4 + 0.1,
-                color: Math.random() > 0.4 
-                    ? `rgba(232, 119, 34, ${Math.random() * 0.3 + 0.2})` 
-                    : `rgba(242, 242, 242, ${Math.random() * 0.2 + 0.15})`,
+                baseColor: baseColor,
+                baseOpacity: baseOpacity,
                 history: []
             };
         }
@@ -386,12 +387,9 @@ document.addEventListener("DOMContentLoaded", () => {
         function animate() {
             requestAnimationFrame(animate);
 
-            // Select background clear color with low opacity for weather trailing effect
+            // Clear canvas completely to keep background clean and avoid orange haze buildup
             const theme = document.documentElement.getAttribute("data-theme") || "dark";
-            let bgClearColor = "rgba(7, 4, 1, 0.08)";
-            if (theme === "light") {
-                bgClearColor = "rgba(242, 242, 242, 0.12)";
-            }
+            const bgClearColor = theme === "dark" ? "#070401" : "#F2F2F2";
             
             ctx.fillStyle = bgClearColor;
             ctx.fillRect(0, 0, width, height);
@@ -399,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Update and draw particles
             particles.forEach((p, index) => {
                 p.history.push({ x: p.x, y: p.y });
-                if (p.history.length > 5) {
+                if (p.history.length > 8) {
                     p.history.shift();
                 }
 
@@ -440,17 +438,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 p.x += p.vx;
                 p.y += p.vy;
 
-                // Draw vector streak trails
+                // Draw vector streak trails with progressive fading in opacity and size
                 if (p.history.length > 1) {
-                    ctx.beginPath();
-                    ctx.moveTo(p.history[0].x, p.history[0].y);
                     for (let step = 1; step < p.history.length; step++) {
-                        ctx.lineTo(p.history[step].x, p.history[step].y);
+                        const pt1 = p.history[step - 1];
+                        const pt2 = p.history[step];
+                        const fadeRatio = step / p.history.length;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(pt1.x, pt1.y);
+                        ctx.lineTo(pt2.x, pt2.y);
+                        ctx.strokeStyle = p.baseColor + (p.baseOpacity * fadeRatio) + ")";
+                        ctx.lineWidth = p.size * (0.3 + 0.7 * fadeRatio);
+                        ctx.lineCap = "round";
+                        ctx.stroke();
                     }
-                    ctx.strokeStyle = p.color;
-                    ctx.lineWidth = p.size;
-                    ctx.lineCap = "round";
-                    ctx.stroke();
                 }
 
                 // Recycle offscreen wind streaks
