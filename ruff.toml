@@ -1,0 +1,27 @@
+# Ruff configuration for Python linting and QA
+target-version = "py310"
+
+[lint]
+# E, W: pycodestyle errors and warnings
+# F: pyflakes
+# I: isort (import sorting)
+# D: pydocstyle (NumPy docstrings)
+# ANN: flake8-annotations (type hints)
+select = [
+    "E", "W",
+    "F",
+    "I",
+    "D",
+    "ANN"
+]
+
+# Ignore specific rules that are overly pedantic or redundant:
+# ANN101: missing type annotation for 'self' in methods
+# ANN102: missing type annotation for 'cls' in classmethods
+ignore = [
+    "ANN101",
+    "ANN102"
+]
+
+[lint.pydocstyle]
+convention = "numpy"

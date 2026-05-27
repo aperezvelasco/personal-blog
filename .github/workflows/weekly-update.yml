@@ -3,7 +3,7 @@ name: Weekly Blog Paper Aggregation
 on:
   schedule:
     # Run every Sunday at 00:00 UTC
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
   workflow_dispatch:
     # Allow manual triggering from GitHub UI
 
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # Allow workflow to commit changes back to repo
-      
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -32,10 +32,10 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           # Stage changes
           git add data/posts.json
-          
+
           # Only commit and push if there are changes
           if ! git diff --cached --quiet; then
             git commit -m "chore: automated weekly update of AI-geoscience papers"

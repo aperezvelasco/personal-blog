@@ -1,3 +1,20 @@
-# pixi environments
+# Pixi environment
 .pixi/*
 !.pixi/config.toml
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node modules
+node_modules/
+
+# OS/IDE files
+.DS_Store
+.vscode/
+.idea/

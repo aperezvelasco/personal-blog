@@ -1,0 +1,36 @@
+repos:
+  # General file formatting and QA checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  # Python Code Formatter (Black style)
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        types: [python]
+
+  # Python Code Linter & Docstring/Type Hint Checker (Ruff)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+
+  # HTML, CSS, JS, Markdown, JSON Formatter (Prettier)
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        types_or: [javascript, css, html, json, markdown, yaml]
+
+  # Secret & Credential Leak Protection (Gitleaks)
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
