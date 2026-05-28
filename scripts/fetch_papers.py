@@ -182,6 +182,50 @@ def parse_rss_items(xml_content: str) -> List[Dict[str, Any]]:
     return papers
 
 
+def _has_word(text: str, word: str) -> bool:
+    """
+    Check if a word/phrase is present in the text as a whole word.
+
+    Parameters
+    ----------
+    text : str
+        The text to search.
+    word : str
+        The word or phrase to look for.
+
+    Returns
+    -------
+    bool
+        True if the word is found, False otherwise.
+    """
+    import re
+
+    pattern: str = rf"\b{re.escape(word)}\b"
+    return bool(re.search(pattern, text))
+
+
+def _count_word(text: str, word: str) -> int:
+    """
+    Count the number of times a word/phrase occurs in the text as a whole word.
+
+    Parameters
+    ----------
+    text : str
+        The text to search.
+    word : str
+        The word or phrase to count.
+
+    Returns
+    -------
+    int
+        The count of occurrences.
+    """
+    import re
+
+    pattern: str = rf"\b{re.escape(word)}\b"
+    return len(re.findall(pattern, text))
+
+
 def categorize_paper(
     title: str, summary: str, default_category: str = "Weather Forecasting"
 ) -> str:
@@ -209,52 +253,52 @@ def categorize_paper(
 
     scores: Dict[str, float] = {
         "Weather Forecasting": (
-            text.count("weather forecast") * 3.0
-            + text.count("weather prediction") * 3.0
-            + text.count("nowcasting") * 2.5
-            + text.count("precipitation forecast") * 2.0
-            + text.count("numerical weather") * 2.5
-            + text.count("nwp") * 2.0
-            + text.count("forecasting") * 0.5
+            _count_word(text, "weather forecast") * 3.0
+            + _count_word(text, "weather prediction") * 3.0
+            + _count_word(text, "nowcasting") * 2.5
+            + _count_word(text, "precipitation forecast") * 2.0
+            + _count_word(text, "numerical weather") * 2.5
+            + _count_word(text, "nwp") * 2.0
+            + _count_word(text, "forecasting") * 0.5
         ),
         "Subseasonal to Seasonal Forecasting": (
-            text.count("subseasonal") * 3.0
-            + text.count("seasonal forecast") * 3.0
-            + text.count("s2s") * 3.0
-            + text.count("seasonal prediction") * 3.0
-            + text.count("interannual") * 2.0
-            + text.count("el nino") * 2.0
-            + text.count("enso") * 2.0
+            _count_word(text, "subseasonal") * 3.0
+            + _count_word(text, "seasonal forecast") * 3.0
+            + _count_word(text, "s2s") * 3.0
+            + _count_word(text, "seasonal prediction") * 3.0
+            + _count_word(text, "interannual") * 2.0
+            + _count_word(text, "el nino") * 2.0
+            + _count_word(text, "enso") * 2.0
         ),
         "Climate Emulation": (
-            text.count("emulator") * 3.0
-            + text.count("emulation") * 3.0
-            + text.count("climate model emulator") * 4.0
-            + text.count("climate emulator") * 4.0
-            + text.count("earth system model") * 2.5
-            + text.count("coupled") * 1.5
-            + text.count("cmip") * 2.0
-            + text.count("gcm") * 2.0
+            _count_word(text, "emulator") * 3.0
+            + _count_word(text, "emulation") * 3.0
+            + _count_word(text, "climate model emulator") * 4.0
+            + _count_word(text, "climate emulator") * 4.0
+            + _count_word(text, "earth system model") * 2.5
+            + _count_word(text, "coupled") * 1.5
+            + _count_word(text, "cmip") * 2.0
+            + _count_word(text, "gcm") * 2.0
         ),
         "Data Assimilation": (
-            text.count("data assimilation") * 4.0
-            + text.count("state estimation") * 2.0
-            + text.count("kalman filter") * 2.5
-            + text.count("variational") * 2.0
-            + text.count("ensemble kalman") * 3.0
-            + text.count("4dvar") * 3.0
-            + text.count("3dvar") * 3.0
+            _count_word(text, "data assimilation") * 4.0
+            + _count_word(text, "state estimation") * 2.0
+            + _count_word(text, "kalman filter") * 2.5
+            + _count_word(text, "variational") * 2.0
+            + _count_word(text, "ensemble kalman") * 3.0
+            + _count_word(text, "4dvar") * 3.0
+            + _count_word(text, "3dvar") * 3.0
         ),
         "Downscaling": (
-            text.count("downscaling") * 4.0
-            + text.count("super-resolution") * 3.0
-            + text.count("spatial resolution") * 2.0
-            + text.count("temporal disaggregation") * 3.0
-            + text.count("rainfall disaggregation") * 3.0
-            + text.count("bias correction") * 2.5
-            + text.count("bias adjustment") * 2.5
-            + text.count("statistical downscaling") * 4.0
-            + text.count("dynamical downscaling") * 4.0
+            _count_word(text, "downscaling") * 4.0
+            + _count_word(text, "super-resolution") * 3.0
+            + _count_word(text, "spatial resolution") * 2.0
+            + _count_word(text, "temporal disaggregation") * 3.0
+            + _count_word(text, "rainfall disaggregation") * 3.0
+            + _count_word(text, "bias correction") * 2.5
+            + _count_word(text, "bias adjustment") * 2.5
+            + _count_word(text, "statistical downscaling") * 4.0
+            + _count_word(text, "dynamical downscaling") * 4.0
         ),
     }
 
@@ -263,8 +307,6 @@ def categorize_paper(
     for topic, score in scores.items():
         if score > max_score:
             max_score = score
-            best_category = topic
-
     return best_category
 
 
@@ -273,23 +315,75 @@ def is_relevant_geoscience(title: str, summary: str) -> bool:
     Determine relevance of a paper to weather, climate, and geoscience.
 
     Computes a weighted score from positive and negative keyword occurrences
-    in the title (higher weight) and abstract. Papers must reach a threshold
-    to be included.
+    in the title and abstract, and requires at least one core geoscience term
+    to prevent general machine learning papers from matching.
 
     Parameters
     ----------
     title : str
         The title of the paper.
     summary : str
-        The summary/abstract of the paper.
+        The summary or abstract of the paper.
 
     Returns
     -------
     bool
-        True if the score is above the threshold, False otherwise.
+        True if the paper is relevant to geoscience, False otherwise.
     """
     title_lower: str = title.lower()
     summary_lower: str = summary.lower()
+
+    # Enforce at least one core geoscience keyword (as a whole word/phrase)
+    core_keywords: List[str] = [
+        "weather",
+        "forecast",
+        "forecasting",
+        "nowcasting",
+        "nwp",
+        "climate",
+        "climatology",
+        "meteorology",
+        "meteorological",
+        "atmosphere",
+        "atmospheric",
+        "ocean",
+        "oceanic",
+        "sea surface",
+        "sst",
+        "sea ice",
+        "downscaling",
+        "downscale",
+        "data assimilation",
+        "precipitation",
+        "rainfall",
+        "temperature",
+        "wind speed",
+        "subseasonal",
+        "seasonal",
+        "s2s",
+        "el nino",
+        "enso",
+        "monsoon",
+        "cyclone",
+        "hurricane",
+        "flood",
+        "drought",
+        "reanalysis",
+        "era5",
+        "cerra",
+        "cmip",
+        "gcm",
+        "earth system",
+        "geoscience",
+        "geophysical",
+    ]
+
+    has_core: bool = any(
+        _has_word(title_lower, kw) or _has_word(summary_lower, kw)
+        for kw in core_keywords
+    )
+    if not has_core:
+        return False
 
     score: float = 0.0
 
@@ -340,6 +434,7 @@ def is_relevant_geoscience(title: str, summary: str) -> bool:
         "natural language": -6.0,
         "text generation": -8.0,
         "large language model": -6.0,
+        "llm": -8.0,
         "fraud detection": -15.0,
         "financial": -10.0,
         "stock market": -12.0,
@@ -355,12 +450,21 @@ def is_relevant_geoscience(title: str, summary: str) -> bool:
         "lunar rover": -15.0,
         "worker disagreement": -10.0,
         "graph neural": -3.0,
+        "chain-of-thought": -15.0,
+        "chain of thought": -15.0,
+        "hopfield": -15.0,
+        "liquid crystal": -12.0,
+        "nematic": -12.0,
+        "robot guide": -10.0,
+        "tactile": -12.0,
+        "proprioceptive": -12.0,
+        "microcontroller": -10.0,
     }
 
     for keyword, penalty in negatives.items():
-        if keyword in title_lower:
+        if _has_word(title_lower, keyword):
             score += penalty * 1.5
-        elif keyword in summary_lower:
+        elif _has_word(summary_lower, keyword):
             score += penalty
 
     positives: Dict[str, float] = {
@@ -444,9 +548,9 @@ def is_relevant_geoscience(title: str, summary: str) -> bool:
     }
 
     for keyword, points in positives.items():
-        if keyword in title_lower:
+        if _has_word(title_lower, keyword):
             score += points * 2.0
-        elif keyword in summary_lower:
+        elif _has_word(summary_lower, keyword):
             score += points
 
     return score >= 5.0

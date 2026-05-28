@@ -133,19 +133,22 @@ def compile_all_posts() -> None:
         if papers:
             print(f"Restored {len(papers)} cached papers.")
 
-    # --- 3. Merge with existing cached papers (preserve explanations) ---
+    # --- 3. Merge with cached papers (accumulate history) ---
     # Build index of existing papers to preserve their explanations
     cached_map: Dict[str, Dict[str, Any]] = {}
     for p in load_cached_papers(output_file):
         cached_map[p.get("id", "")] = p
 
-    # Carry forward existing explanations so we don't regenerate them
-    merged_papers: List[Dict[str, Any]] = []
+    # Merge newly fetched papers into the cached set
     for paper in papers:
         pid = paper.get("id", "")
-        if pid in cached_map and cached_map[pid].get("explanation"):
-            paper = {**paper, "explanation": cached_map[pid]["explanation"]}
-        merged_papers.append(paper)
+        if pid in cached_map:
+            # Carry forward existing explanation if present
+            if cached_map[pid].get("explanation"):
+                paper["explanation"] = cached_map[pid]["explanation"]
+        cached_map[pid] = paper
+
+    merged_papers: List[Dict[str, Any]] = list(cached_map.values())
 
     # --- 4. Generate plain-language explanations via Gemini ---
     print("\nGenerating plain-language explanations for papers...")
@@ -158,6 +161,7 @@ def compile_all_posts() -> None:
     # --- 6. Save to file ---
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(all_posts, f, indent=2, ensure_ascii=False)
+        f.write("\n")
 
     print(
         f"\n✓ Blog compiled successfully. Total posts: {len(all_posts)} "
