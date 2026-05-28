@@ -1,19 +1,8 @@
 [
   {
-    "id": "hello-world",
-    "title": "Welcome to my Personal Site & AI Geoscience Hub",
-    "summary": "Welcome to my new personal portfolio and blog. In this post, I introduce the website design, outline my professional background, and explain how the automated weekly AI geoscience paper aggregator works.",
-    "full_content": "<p>Welcome to my personal site and blog! This space serves as both my professional portfolio and a hub for keeping track of the rapid developments at the intersection of <strong>Artificial Intelligence (AI)</strong> and the <strong>Geosciences</strong>.</p>\n<h2>Why this site?</h2>\n<p>As a Senior Software and Data Engineer at <a href=\"http://www.predictia.es/\">Predictia</a>, I spend my days building robust pipelines for climate data workflows, orchestrating containerized services in operational environments, and building deep learning models for meteorology. Climate data is inherently large, complex, and high-dimensional (working with NetCDF, GRIB, and Zarr formats).</p>\n<p>In recent years, the integration of Machine Learning (ML) in weather and climate modeling has exploded. Models like <em>AIFS</em> (ECMWF), <em>FourCastNet</em>, <em>GraphCast</em>, and various regional emulators are transforming how we predict weather and assess climate projections.</p>\n<p>Keeping up with these papers can be overwhelming. To address this, I built an automated aggregator into this blog.</p>\n<h2>How the Paper Aggregator Works</h2>\n<p>Every week, an automated script queries the public <strong>arXiv API</strong> for papers matching specific machine learning search terms in five key domains:</p>\n<ol>\n<li><strong>Global &amp; Regional Weather Forecasting</strong></li>\n<li><strong>Subseasonal to Seasonal (S2S) Forecasting</strong></li>\n<li><strong>Climate Emulation</strong></li>\n<li><strong>Data Assimilation</strong></li>\n<li><strong>Downscaling</strong></li>\n</ol>\n<p>The fetched papers are categorized, merged with any manual blog posts I write, and updated directly on this page. You can filter posts using the tags in the blog section.</p>\n<h2>Open Source &amp; Collaboration</h2>\n<p>I'm a big believer in open science and open source. Many of my research topics and codebases are hosted publicly. For instance:</p>\n<ul>\n<li><strong>aq-biascorrection</strong>: Bias correction of CAMS air quality forecasts using PyTorch. <a href=\"https://github.com/ECMWFCode4Earth/aq-biascorrection\">GitHub Repo</a></li>\n<li><strong>DeepR</strong>: Regional downscaling of global reanalysis datasets. <a href=\"https://github.com/ECMWFCode4Earth/DeepR\">GitHub Repo</a></li>\n</ul>\n<p>Feel free to look around, explore the papers, and get in touch if you have any questions or collaborations in mind!</p>",
-    "authors": ["Antonio Pérez Velasco"],
-    "link": "",
-    "date": "2026-05-27",
-    "category": "Blog",
-    "type": "blog"
-  },
-  {
-    "id": "2605.28153v1",
+    "id": "2605.28153",
     "title": "Skillful high-resolution weather forecasting independent of physical models",
-    "summary": "Accurate and timely weather forecasts are critical for high-impact decisions in modern society. Machine-learning-based weather prediction is emerging as an alternative for producing initial conditions, forecasts, and even both in end-to-end systems. These methods deliver predictions faster and often with higher skill than traditional numerical weat...",
+    "summary": "Accurate and timely weather forecasts are critical for high-impact decisions in modern society. Machine-learning-based weather prediction is emerging as an alternative for producing initial conditions, forecasts, and even both in end-to-end systems. These methods deliver predictions faster and often with higher skill than traditional numerical weather prediction (NWP). However, even end-to-end mod...",
     "full_content": "Accurate and timely weather forecasts are critical for high-impact decisions in modern society. Machine-learning-based weather prediction is emerging as an alternative for producing initial conditions, forecasts, and even both in end-to-end systems. These methods deliver predictions faster and often with higher skill than traditional numerical weather prediction (NWP). However, even end-to-end models typically rely on NWP-generated reanalyses for supervision, thereby inheriting the biases and resolution limitations of those NWPs, and limiting adaptation to settings where suitable reanalysis products are unavailable, infrequently updated, or expensive to produce. Here we introduce ObsCast, a regional system that generates both analysis and predictions, without using any NWP-derived data in either training or inference, while still achieving state-of-the-art performance in short-term high-resolution regional modeling. Over the contiguous United States and Europe, ObsCast outperforms operational NWP for near-surface variables through 18 h and produces skillful precipitation forecasts. It provides a simpler and more adaptable route to build and refine regional forecasting services directly from local observations, without the need to develop complex and costly traditional forecasting pipelines.",
     "authors": [
       "Pengcheng Zhao",
@@ -30,161 +19,291 @@
       "Kit Thambiratnam",
       "Qi Zhang"
     ],
+    "link": "https://arxiv.org/abs/2605.28153",
+    "date": "2026-05-28",
+    "category": "Weather Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2505.17720",
+    "title": "PEAR: Equal Area Weather Forecasting on the Sphere",
+    "summary": "Artificial intelligence is rapidly reshaping the natural sciences, with weather forecasting emerging as a flagship AI4Science application where machine learning models can now rival and even surpass traditional numerical simulations. Following the success of the landmark models Pangu Weather and Graphcast, outperforming traditional numerical methods for global medium-range forecasting, many novel ...",
+    "full_content": "Artificial intelligence is rapidly reshaping the natural sciences, with weather forecasting emerging as a flagship AI4Science application where machine learning models can now rival and even surpass traditional numerical simulations. Following the success of the landmark models Pangu Weather and Graphcast, outperforming traditional numerical methods for global medium-range forecasting, many novel data-driven methods have emerged. A common limitation shared by many of these models is their reliance on an equiangular discretization of the sphere which suffers from a much finer grid at the poles than around the equator. In contrast, in the Hierarchical Equal Area iso-Latitude Pixelization (HEALPix) of the sphere, each pixel covers the same surface area, removing unphysical biases. Motivated by a growing support for this grid in meteorology and climate sciences, we propose to perform weather forecasting with deep learning models which natively operate on the HEALPix grid. To this end, we introduce Pangu Equal ARea (PEAR), a transformer-based weather forecasting model which operates directly on HEALPix-features and outperforms the corresponding model on an equiangular grid, and other baselines, without any computational overhead. Furthermore, we perform numerical experiments on the equivariance properties of our setup and verify the performance of PEAR on climate model emulation.",
+    "authors": [
+      "Hampus Linander",
+      "Tage Tykesson",
+      "Pietro Rosso",
+      "Christoffer Petersson",
+      "Daniel Persson",
+      "Jan E. Gerken"
+    ],
+    "link": "https://arxiv.org/abs/2505.17720",
+    "date": "2026-05-28",
+    "category": "Weather Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2605.27476",
+    "title": "Balancing Fidelity and Diversity in Diffusion Models via Symmetric Attention Decomposition: Hopfield Perspective",
+    "summary": "We characterize the pre-softmax attention matrix $\\mathbf{QK^\\top}$ in transformers as an associative memory matrix encoding pairwise associations between input features. By decomposing this matrix into its symmetric and skew-symmetric parts, we interpret the symmetric component as governing the structure of the energy landscape, and the skew-symmetric component as driving circulation on that land...",
+    "full_content": "We characterize the pre-softmax attention matrix $\\mathbf{QK^\\top}$ in transformers as an associative memory matrix encoding pairwise associations between input features. By decomposing this matrix into its symmetric and skew-symmetric parts, we interpret the symmetric component as governing the structure of the energy landscape, and the skew-symmetric component as driving circulation on that landscape. Leveraging the energy formulation induced by the symmetric component, we derive Hopfield-style stability measures that quantify the stability of retrieved features. We observe meaningful correlations between Hopfield-style stability measures and the fidelity-diversity trade-offs in generation. Finally, we propose a controllable knob to modulate this trade-off by modifying the circulation of the underlying dynamics. Code is available at our GitHub (https://github.com/hyeon-cho/Attention-Symmetric-Decomposition).",
+    "authors": ["Hyunmin Cho", "Woo Kyoung Han", "Kyong Hwan Jin"],
+    "link": "https://arxiv.org/abs/2605.27476",
+    "date": "2026-05-28",
+    "category": "Weather Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2605.27975",
+    "title": "Continual Learning in Modern Hopfield Networks with an Application to Diffusion Models",
+    "summary": "Generative models, including diffusion models, are increasingly used as foundation models and adapted through sequential fine-tuning, making continual learning an essential problem setting. However, continual learning in such generative models remains poorly understood: after a task change, what aspects of the learned distribution are most easily lost, and what replay samples should be prioritized...",
+    "full_content": "Generative models, including diffusion models, are increasingly used as foundation models and adapted through sequential fine-tuning, making continual learning an essential problem setting. However, continual learning in such generative models remains poorly understood: after a task change, what aspects of the learned distribution are most easily lost, and what replay samples should be prioritized? We address these questions through the modern Hopfield energy. Recent links between modern Hopfield networks (MHNs) and diffusion models allow analyses in MHNs to be transferred to diffusion models. We introduce intrinsic forgetting as an increase in Hopfield energy after the task change. In tractable settings in an MHN, we prove that high-energy, outlier-like samples undergo a larger energy increase than cluster-like samples, implying that samples located in sharp, isolated basins are more forgettable. We further analyze memory replay and show that replay is particularly effective for high-energy samples, enabling an energy-based selection of replay samples. We validate these predictions in experiments on MHNs and two diffusion models under continual-learning settings: Stable Diffusion and a pixel-space DDPM. In these diffusion models, Hopfield energy tracks reconstruction-based forgetting, and replay experiments reveal energy-dependent mitigation of forgetting that is consistent with the MHN analysis.",
+    "authors": ["Ken Takeda", "Masafumi Oizumi", "Ryo Karakida"],
+    "link": "https://arxiv.org/abs/2605.27975",
+    "date": "2026-05-28",
+    "category": "Weather Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2605.28600",
+    "title": "Transformers Provably Learn to Internalize Chain-of-Thought",
+    "summary": "Chain-of-Thought (CoT) prompting substantially improves the sample efficiency of transformers, reducing the complexity of tasks like parity learning from exponential to polynomial in the input length. However, generating explicit reasoning steps at inference is computationally expensive. Implicit Chain-of-Thought (ICoT) has emerged as a promising empirical remedy that trains models to internalize ...",
+    "full_content": "Chain-of-Thought (CoT) prompting substantially improves the sample efficiency of transformers, reducing the complexity of tasks like parity learning from exponential to polynomial in the input length. However, generating explicit reasoning steps at inference is computationally expensive. Implicit Chain-of-Thought (ICoT) has emerged as a promising empirical remedy that trains models to internalize intermediate steps within their hidden states, but its theoretical foundations remain poorly understood. We give the first theoretical analysis of ICoT, proving that an $L$-layer transformer trained under our proposed Log-ICoT curriculum learns $k$-parity with $\\mathsf{poly}(n)$ samples and $L = \\log_2 k$ training stages. This matches the sample efficiency of explicit CoT while eliminating its inference overhead, and extends prior one-layer parity guarantees to multi-layer architectures. Compared to standard ICoT, which removes thinking tokens one at a time, Log-ICoT removes them in geometric chunks, reducing the number of stages from linear in $k$ to logarithmic. Experiments on multi-layer transformers confirm the theory and visualize how reasoning is progressively absorbed into deeper layers.",
+    "authors": [
+      "Yixiao Huang",
+      "Hanlin Zhu",
+      "Zixuan Wang",
+      "Jiantao Jiao",
+      "Stuart Russell",
+      "Somayeh Sojoudi",
+      "Song Mei"
+    ],
+    "link": "https://arxiv.org/abs/2605.28600",
+    "date": "2026-05-28",
+    "category": "Weather Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2604.26594",
+    "title": "Multiscale Decomposition Reveals Predictable Interannual Variability and Climate Trends in Antarctic Sea Ice Loss",
+    "summary": "Antarctic sea ice has undergone unprecedented changes in recent years, raising questions about how this key geophysical system is responding to climate change. Decades of slow expansion were replaced by a precipitous decline in 2014-2017, a subsequent apparent recovery, and a renewed collapse from 2022 to the present. We diagnosed sea ice concentration (SIC) from satellite observations with a hier...",
+    "full_content": "Antarctic sea ice has undergone unprecedented changes in recent years, raising questions about how this key geophysical system is responding to climate change. Decades of slow expansion were replaced by a precipitous decline in 2014-2017, a subsequent apparent recovery, and a renewed collapse from 2022 to the present. We diagnosed sea ice concentration (SIC) from satellite observations with a hierarchical decomposition method based on Dynamic Mode Decomposition (DMD) that finds coherent spatiotemporal modes. We find that the 2014-2017 decline and apparent recovery are the result of interacting interannual modes and that a climate change signal emerges in 2012, which becomes unambiguous by 2022 when it dominates over interannual variability. These rapid changes underscore the need for seasonal-to-annual forecasts of SIC. However, existing forecasts are subject to limited prediction horizons combined with high computational costs. Our predictive DMD model (IceDMD) is regularised to prioritize the stationary spatiotemporal modes found by the decomposition. The predictive model can forecast SIC anomalies in 2023-2024 up to two years in advance, outperforming all existing approaches with the additional benefits of physical interpretability and extremely cheap computational cost. Finally, this framework for regularising predictive DMD models can be generalized to a range of multi-scale systems.",
+    "authors": [
+      "Peter Yatsyshin",
+      "Karl Lapo",
+      "Oliver Strickson",
+      "Louisa van Zeeland",
+      "J. Scott Hosking",
+      "J. Nathan Kutz"
+    ],
+    "link": "https://arxiv.org/abs/2604.26594",
+    "date": "2026-05-28",
+    "category": "Subseasonal to Seasonal Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2605.28300",
+    "title": "T-GINEE: A Tensor-Based Multilayer Graph Representation Learning",
+    "summary": "Traditional network analysis focuses on single-layer networks, real-world systems often form multilayer networks with multiple relationship types. However, existing methods typically fail to capture complex inter-layer dependencies by treating layers independently or aggregating them. To address this, we propose T-GINEE (Tensor-Based Generalized Multilayer-graph Estimating Equation), a statistical...",
+    "full_content": "Traditional network analysis focuses on single-layer networks, real-world systems often form multilayer networks with multiple relationship types. However, existing methods typically fail to capture complex inter-layer dependencies by treating layers independently or aggregating them. To address this, we propose T-GINEE (Tensor-Based Generalized Multilayer-graph Estimating Equation), a statistical regularization framework combining tensor-based generalized estimating equations with task-specific loss to model cross-network correlations explicitly. Key innovations include: (1) CP tensor decomposition capturing structural dependencies via shared latent factors; (2) a generalized estimating equation framework modeling inter-layer correlations through working covariance matrices; and (3) a flexible link function accommodating characteristics like sparsity. Our theoretical analysis establishes consistency and asymptotic normality under mild conditions. Extensive experiments on synthetic and real-world datasets validate T-GINEE's effectiveness for multilayer network analysis.",
+    "authors": [
+      "Maolin Wang",
+      "Ziting Mai",
+      "Xuhui Chen",
+      "Zhiqi Li",
+      "Tianshuo Wei",
+      "Yutian Xiao",
+      "Wenlin Zhang",
+      "Wanyu Wang",
+      "Ruocheng Guo",
+      "Haoxuan Li",
+      "Zenglin Xu",
+      "Xiangyu Zhao"
+    ],
+    "link": "https://arxiv.org/abs/2605.28300",
+    "date": "2026-05-28",
+    "category": "Subseasonal to Seasonal Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2605.27679",
+    "title": "On the Equivariant Learning of the $Q$-tensor Order Parameter",
+    "summary": "We construct and evaluate group-equivariant neural networks for the prediction of the two-dimensional $Q$-tensor order parameter of nematic liquid crystals from synthetically generated microscopic textures. Seven architectures, equivariant to cyclic groups $C_k$ of order $k$ for $k=4,\\,8,\\,16,\\,32,\\,64,\\,128,\\, 256$, are built using a combination of weight-sharing constraints, equivariant activati...",
+    "full_content": "We construct and evaluate group-equivariant neural networks for the prediction of the two-dimensional $Q$-tensor order parameter of nematic liquid crystals from synthetically generated microscopic textures. Seven architectures, equivariant to cyclic groups $C_k$ of order $k$ for $k=4,\\,8,\\,16,\\,32,\\,64,\\,128,\\, 256$, are built using a combination of weight-sharing constraints, equivariant activations and regularization techniques. To do this, we construct rotation-like permutation matrix groups with elements $\\varrho_{C_k}(g)$ that act on row-wise vectorized images, thereby approximating a $\\frac{2\\pi}{k}$ rotation of the circular subdomain on square images. We show that all seven equivariant models satisfy the $Q$-tensor equivariance constraint to within single-precision floating point accuracy. Comparing against approximate parameter-matched non-equivariant benchmarks, with and without data augmentation, we find that the equivariant models consistently achieve lower errors and generalize more robustly to unseen defect configurations. Performance increases with group order, suggesting that the incorporation of finer rotational symmetry leads to lower errors.",
+    "authors": ["Julia Navarro", "Mark Wilkinson"],
+    "link": "https://arxiv.org/abs/2605.27679",
+    "date": "2026-05-28",
+    "category": "Subseasonal to Seasonal Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2605.28412",
+    "title": "Tactile-Proprioceptive Sensor Fusion for Contact Wrench Estimation in Whole-Body Physical Human-Robot Interaction",
+    "summary": "Direct physical guidance is a natural means of teaching and interacting with robots, and robotic skins make a key contribution by enabling sensitive contact sensing and localization. This paper presents a tactile-proprioceptive sensor fusion framework for natural physical human-robot interaction. Tactile cues from pneumatic skin pads serve as contact indicators that bypass the ambiguity between fr...",
+    "full_content": "Direct physical guidance is a natural means of teaching and interacting with robots, and robotic skins make a key contribution by enabling sensitive contact sensing and localization. This paper presents a tactile-proprioceptive sensor fusion framework for natural physical human-robot interaction. Tactile cues from pneumatic skin pads serve as contact indicators that bypass the ambiguity between frictional residues and applied external forces, enabling highly sensitive contact detection without explicit friction identification. We fuse these cues with motor-current-based proprioception to reconstruct multi-axis contact forces on the robot surface. To maintain accuracy during motion, we employ a temporal convolutional network (TCN) to mitigate friction hysteresis during stick-slip transitions, reducing uncertainty at contact onset and yielding smooth, responsive guidance. We validate the approach on a skin-integrated robot arm: (i) multi-axis forces are reconstructed in stationary contacts, and (ii) simultaneous force estimation and kinesthetic teaching are demonstrated. Results indicate improved sensitivity and responsiveness across diverse contact conditions compared with tactile-only and proprioceptive-only baselines, supporting tactile-proprioceptive fusion as a reliable pathway to safe, intuitive physical human-robot interaction.",
+    "authors": [
+      "Junha Min",
+      "Junghyeon Ma",
+      "Jiwung Kwon",
+      "Sunggyu Bae",
+      "Joohyung Kim",
+      "Kyungseo Park"
+    ],
+    "link": "https://arxiv.org/abs/2605.28412",
+    "date": "2026-05-28",
+    "category": "Subseasonal to Seasonal Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2512.09786",
+    "title": "TinyD\\'ej\\`aVu: Smaller RAM and Faster Inference with Neural Networks on MCUs for Sensor Data Streams",
+    "summary": "Examples of embedded intelligence include a wide variety of tiny neural networks used on-board wireless sensors and actuators, which are expected to continuously perform inference on time-series of the data they sense. In order to fit lifetime and energy consumption requirements when operating on battery, such hardware is exclusively based on microcontroller with as little memory as possible, e.g....",
+    "full_content": "Examples of embedded intelligence include a wide variety of tiny neural networks used on-board wireless sensors and actuators, which are expected to continuously perform inference on time-series of the data they sense. In order to fit lifetime and energy consumption requirements when operating on battery, such hardware is exclusively based on microcontroller with as little memory as possible, e.g., 128 kB of RAM. In this context, optimizing data flows during inference across neural network layers becomes crucial. In this paper, we introduce a new framework, TinyD\\'ej\\`aVu, and novel algorithms we designed to drastically reduce the RAM budget required by inference using various neural network models for sensor data time-series on typical microcontroller hardware. We publish the implementation of TinyD\\'ej\\`aVu as open source, and we perform reproducible benchmarks on common microcontroller hardware (Arm Cortex-M). We show that TinyD\\'ej\\`aVu can save up to 90\\% of RAM usage with equal compute latency compared to prior work (StreamiNNC) on overlapping sliding window inputs.",
+    "authors": ["Zhaolan Huang", "Emmanuel Baccelli"],
+    "link": "https://arxiv.org/abs/2512.09786",
+    "date": "2026-05-28",
+    "category": "Subseasonal to Seasonal Forecasting",
+    "type": "paper"
+  },
+  {
+    "id": "2603.28704",
+    "title": "ACE2-NEMO: Coupling an ML atmospheric emulator to a full-depth dynamical ocean model",
+    "summary": "Understanding how fast atmospheric variability shapes slow climate variability and sensitivity remains a central challenge in Earth-system science. Recent advances in machine-learned (ML) atmospheric models have demonstrated remarkable skill on weather timescales, but their emergent behaviour in a fully coupled climate system remains largely unexplored. We present early results from a new hybrid m...",
+    "full_content": "Understanding how fast atmospheric variability shapes slow climate variability and sensitivity remains a central challenge in Earth-system science. Recent advances in machine-learned (ML) atmospheric models have demonstrated remarkable skill on weather timescales, but their emergent behaviour in a fully coupled climate system remains largely unexplored. We present early results from a new hybrid modelling framework, in which the ACE2 ML atmospheric emulator is interactively coupled to the NEMO ocean model. We report on a set of 70-year coupled simulations (1950-2020 historical forcing and fixed-1950s control). These experiments represent, to our knowledge, the first multi-decadal integrations of a machine-learned atmosphere interacting with a full-depth dynamical ocean. Several historical and fixed-1950s control simulations from the fully dynamic global coupled climate model EC-Earth, which has the same ocean component used in ACE2-NEMO, are also considered for comparison. We assess the behaviour of the coupled system, with particular focus on low-frequency tropical variability and the climate response to greenhouse-gas forcing. Analysis of potentially emergent El Ni\\~{n}o-like variability reveals realistic fast timescale air-sea coupling in the tropical Pacific, but the temporal variability is unrealistic, with very low amplitude oscillations; this appears to be due to weak atmospheric feedback in the tropical Pacific. The response to CO2 forcing shows initial agreement with EC-Earth3P, but deviates due to reduced downward short-wave radiation in ACE2. These results provide a unique test of physical realism for atmospheric emulators, and evaluate the possible role of entirely machine-learned components in next-generation Earth system models.",
+    "authors": [
+      "Bobby Antonio",
+      "Kristian Strommen",
+      "Pablo Ortega",
+      "Hannah M. Christensen"
+    ],
+    "link": "https://arxiv.org/abs/2603.28704",
+    "date": "2026-05-28",
+    "category": "Climate Emulation",
+    "type": "paper"
+  },
+  {
+    "id": "2605.19514",
+    "title": "Position: The Turing-Completeness of Autoregressive Transformers Relies Heavily on Context Management",
+    "summary": "Many works make the eye-catching claim that Transformers are Turing-complete. However, the literature often conflates two distinct settings: (i) a fixed Transformer system setting, in which a fixed autoregressive Transformer is coupled with a fixed context-management method to process inputs of different lengths step by step, and (ii) a scaling-family setting, in which a family of different models...",
+    "full_content": "Many works make the eye-catching claim that Transformers are Turing-complete. However, the literature often conflates two distinct settings: (i) a fixed Transformer system setting, in which a fixed autoregressive Transformer is coupled with a fixed context-management method to process inputs of different lengths step by step, and (ii) a scaling-family setting, in which a family of different models (with increasing context-window length or numerical precision) is used to handle different input lengths. Existing proofs of Transformer Turing-completeness are frequently established in setting (ii), whereas real-world LLM deployment and the standard notion of Turing-completeness correspond more naturally to setting (i). In this paper, we first formalize the fixed-system setting, thereby providing a concrete characterization of how real-world LLMs operate. We then argue that results proved in the scaling-family setting provide theoretically meaningful resource bounds but do not establish Turing-completeness, thereby clarifying a common misinterpretation of existing results. Finally, we show that different context-management methods can yield sharply different computational power, and we advocate the position that context management is a central component that critically determines the computational power of real-world autoregressive Transformers.",
+    "authors": ["Guanyu Cui", "Zhewei Wei", "Kun He"],
+    "link": "https://arxiv.org/abs/2605.19514",
+    "date": "2026-05-28",
+    "category": "Climate Emulation",
+    "type": "paper"
+  },
+  {
+    "id": "2512.00252",
+    "title": "DAISI: Data Assimilation with Inverse Sampling using Stochastic Interpolants",
+    "summary": "Data assimilation (DA) is a cornerstone of scientific and engineering applications, combining model forecasts with sparse and noisy observations to estimate latent system states. Classical high-dimensional DA methods, such as the ensemble Kalman filter, rely on Gaussian approximations that are violated for complex dynamics or observation operators. To address this limitation, we introduce DAISI, a...",
+    "full_content": "Data assimilation (DA) is a cornerstone of scientific and engineering applications, combining model forecasts with sparse and noisy observations to estimate latent system states. Classical high-dimensional DA methods, such as the ensemble Kalman filter, rely on Gaussian approximations that are violated for complex dynamics or observation operators. To address this limitation, we introduce DAISI, a scalable filtering algorithm built on flow-based generative models that enables flexible probabilistic inference using data-driven priors. The core idea is to use a stationary, pre-trained generative prior that first incorporates forecast information through a novel inverse-sampling step, before assimilating observations via guidance-based conditional sampling. This allows us to leverage any forecasting model as part of the DA pipeline without having to retrain or fine-tune the generative prior at each assimilation step. Experiments on challenging nonlinear systems show that DAISI achieves accurate filtering results in regimes with sparse, noisy, and nonlinear observations where traditional methods struggle. The code for DAISI is available at https://github.com/Erik-Wikingsson/DAISI.",
+    "authors": [
+      "Martin Andrae",
+      "Erik Wikingsson",
+      "So Takao",
+      "Tomas Landelius",
+      "Fredrik Lindsten"
+    ],
+    "link": "https://arxiv.org/abs/2512.00252",
+    "date": "2026-05-28",
+    "category": "Data Assimilation",
+    "type": "paper"
+  },
+  {
+    "id": "2510.21890",
+    "title": "The Principles of Diffusion Models",
+    "summary": "This book presents the core principles that have guided the development of diffusion models, tracing their origins and showing how diverse formulations arise from shared mathematical ideas. Diffusion modeling starts by defining a forward process that gradually corrupts data into noise, linking the data distribution to a simple prior through a continuum of intermediate distributions. The goal is to...",
+    "full_content": "This book presents the core principles that have guided the development of diffusion models, tracing their origins and showing how diverse formulations arise from shared mathematical ideas. Diffusion modeling starts by defining a forward process that gradually corrupts data into noise, linking the data distribution to a simple prior through a continuum of intermediate distributions. The goal is to learn a reverse process that transforms noise back into data while recovering the same intermediates. We describe three complementary views. The variational view, inspired by variational autoencoders, sees diffusion as learning to remove noise step by step. The score-based view, rooted in energy-based modeling, learns the gradient of the evolving data distribution, indicating how to nudge samples toward more likely regions. The flow-based view, related to normalizing flows, treats generation as following a smooth path that moves samples from noise to data under a learned velocity field. These perspectives share a common backbone: a time-dependent velocity field whose flow transports a simple prior to the data. Sampling then amounts to solving a differential equation that evolves noise into data along a continuous trajectory. On this foundation, the book discusses guidance for controllable generation, efficient numerical solvers, and diffusion-motivated flow-map models that learn direct mappings between arbitrary times. It provides a conceptual and mathematically grounded understanding of diffusion models for readers with basic deep-learning knowledge.",
+    "authors": [
+      "Chieh-Hsin Lai",
+      "Yang Song",
+      "Dongjun Kim",
+      "Yuki Mitsufuji",
+      "Stefano Ermon"
+    ],
+    "link": "https://arxiv.org/abs/2510.21890",
+    "date": "2026-05-28",
+    "category": "Data Assimilation",
+    "type": "paper"
+  },
+  {
+    "id": "2602.00598",
+    "title": "HybridOM: Hybrid Physics-Based and Data-Driven Global Ocean Modeling with Efficient Spatial Downscaling",
+    "summary": "Global ocean modeling is vital for climate science but struggles to balance computational efficiency with accuracy. Traditional numerical solvers are accurate but computationally expensive, while pure deep learning approaches, though fast, often lack physical consistency and long-term stability. To address this, we introduce HybridOM, a framework integrating a lightweight, differentiable numerical...",
+    "full_content": "Global ocean modeling is vital for climate science but struggles to balance computational efficiency with accuracy. Traditional numerical solvers are accurate but computationally expensive, while pure deep learning approaches, though fast, often lack physical consistency and long-term stability. To address this, we introduce HybridOM, a framework integrating a lightweight, differentiable numerical solver as a skeleton to enforce physical laws, with a neural network as the flesh to correct subgrid-scale dynamics. To enable efficient high-resolution modeling, we further introduce a physics-informed regional downscaling mechanism based on flux gating. This design achieves the inference efficiency of AI-based methods while preserving the accuracy and robustness of physical models. Extensive experiments on the GLORYS12V1 and OceanBench dataset validate HybridOM's performance in two distinct regimes: long-term subseasonal-to-seasonal simulation and short-term operational forecasting coupled with the FuXi-2.0 weather model. Results demonstrate that HybridOM achieves state-of-the-art accuracy while strictly maintaining physical consistency, offering a robust solution for next-generation ocean digital twins. Our source code is available at https://github.com/ChiyodaMomo01/HybridOM.",
+    "authors": [
+      "Ruiqi Shu",
+      "Xiaohui Zhong",
+      "Qiusheng Huang",
+      "Ruijian Gou",
+      "Tianrun Gao",
+      "Hao Li",
+      "Xiaomeng Huang"
+    ],
+    "link": "https://arxiv.org/abs/2602.00598",
+    "date": "2026-05-28",
+    "category": "Downscaling",
+    "type": "paper"
+  },
+  {
+    "id": "2512.11524",
+    "title": "Super-Resolved Canopy Height Mapping from Sentinel-2 Time Series Using Airborne LiDAR HD Reference Data across Metropolitan France",
+    "summary": "Fine-scale forest monitoring is essential for understanding canopy structure and its dynamics, which are key indicators of carbon stocks, biodiversity, and forest health. Deep learning is particularly effective for this task, as it integrates spectral, temporal, and spatial signals that jointly reflect the canopy structure. To address this need, we introduce THREASURE-Net, a novel end-to-end frame...",
+    "full_content": "Fine-scale forest monitoring is essential for understanding canopy structure and its dynamics, which are key indicators of carbon stocks, biodiversity, and forest health. Deep learning is particularly effective for this task, as it integrates spectral, temporal, and spatial signals that jointly reflect the canopy structure. To address this need, we introduce THREASURE-Net, a novel end-to-end framework for Tree Height Regression And Super-Resolution. The model is trained on Sentinel-2 time series using reference height metrics derived from LiDAR HD data at multiple spatial resolutions over Metropolitan France to produce annual height maps. We evaluate three model variants, producing tree-height predictions at 2.5 m, 5 m, and 10 m resolution. THREASURE-Net does not rely on any pretrained model nor on reference very high resolution optical imagery to train its super-resolution module; instead, it learns solely from LiDAR-derived height information. Our approach outperforms existing state-of-the-art methods based on Sentinel data and is competitive with methods based on very high resolution imagery. It can be deployed to generate high-precision annual canopy-height maps, achieving mean absolute errors of 2.63 m, 2.70 m, and 2.88 m at 2.5 m, 5 m, and 10 m resolution, respectively. These results highlight the potential of THREASURE-Net for scalable and cost-effective structural monitoring of temperate forests using only freely available satellite data. The source code for THREASURE-Net is available at: https://github.com/Global-Earth-Observation/threasure-net.",
+    "authors": [
+      "Ekaterina Kalinicheva",
+      "Florian Helen",
+      "St\\'ephane Mermoz",
+      "Florian Mouret",
+      "Milena Planells"
+    ],
+    "link": "https://arxiv.org/abs/2512.11524",
+    "date": "2026-05-28",
+    "category": "Downscaling",
+    "type": "paper"
+  },
+  {
+    "id": "hello-world",
+    "title": "Welcome to my Personal Site & AI Geoscience Hub",
+    "summary": "Welcome to my new personal portfolio and blog. In this post, I introduce the website design, outline my professional background, and explain how the automated weekly AI geoscience paper aggregator works.",
+    "full_content": "<p>Welcome to my personal site and blog! This space serves as both my professional portfolio and a hub for keeping track of the rapid developments at the intersection of <strong>Artificial Intelligence (AI)</strong> and the <strong>Geosciences</strong>.</p>\n<h2>Why this site?</h2>\n<p>As a Senior Software and Data Engineer at <a href=\"http://www.predictia.es/\">Predictia</a>, I spend my days building robust pipelines for climate data workflows, orchestrating containerized services in operational environments, and building deep learning models for meteorology. Climate data is inherently large, complex, and high-dimensional (working with NetCDF, GRIB, and Zarr formats).</p>\n<p>In recent years, the integration of Machine Learning (ML) in weather and climate modeling has exploded. Models like <em>AIFS</em> (ECMWF), <em>FourCastNet</em>, <em>GraphCast</em>, and various regional emulators are transforming how we predict weather and assess climate projections.</p>\n<p>Keeping up with these papers can be overwhelming. To address this, I built an automated aggregator into this blog.</p>\n<h2>How the Paper Aggregator Works</h2>\n<p>Every week, an automated script queries the public <strong>arXiv API</strong> for papers matching specific machine learning search terms in five key domains:</p>\n<ol>\n<li><strong>Global &amp; Regional Weather Forecasting</strong></li>\n<li><strong>Subseasonal to Seasonal (S2S) Forecasting</strong></li>\n<li><strong>Climate Emulation</strong></li>\n<li><strong>Data Assimilation</strong></li>\n<li><strong>Downscaling</strong></li>\n</ol>\n<p>The fetched papers are categorized, merged with any manual blog posts I write, and updated directly on this page. You can filter posts using the tags in the blog section.</p>\n<h2>Open Source &amp; Collaboration</h2>\n<p>I'm a big believer in open science and open source. Many of my research topics and codebases are hosted publicly. For instance:</p>\n<ul>\n<li><strong>aq-biascorrection</strong>: Bias correction of CAMS air quality forecasts using PyTorch. <a href=\"https://github.com/ECMWFCode4Earth/aq-biascorrection\">GitHub Repo</a></li>\n<li><strong>DeepR</strong>: Regional downscaling of global reanalysis datasets. <a href=\"https://github.com/ECMWFCode4Earth/DeepR\">GitHub Repo</a></li>\n</ul>\n<p>Feel free to look around, explore the papers, and get in touch if you have any questions or collaborations in mind!</p>",
+    "authors": ["Antonio Pérez Velasco"],
+    "link": "",
+    "date": "2026-05-27",
+    "category": "Blog",
+    "type": "blog"
+  },
+  {
+    "id": "explanation-obscast",
+    "title": "Didactic Breakdown: ObsCast — Weather Forecasting Directly from Observations",
+    "summary": "A plain-language breakdown of the ObsCast paper (arXiv:2605.28153), explaining how we can build regional weather forecasts directly from observations without depending on traditional physical models or NWP reanalyses.",
+    "full_content": "<h1>Didactic Breakdown: ObsCast — Weather Forecasting Directly from Observations</h1>\n<p>Have you ever wondered why AI weather forecasting models still rely so heavily on traditional physics-based models? In this article, we break down <strong>ObsCast</strong> (<a href=\"https://arxiv.org/abs/2605.28153v1\">arXiv:2605.28153</a>), a groundbreaking regional system that cuts the cord between AI and traditional Numerical Weather Prediction (NWP).</p>\n<hr />\n<h2>1. The Core Problem: The AI-NWP Co-Dependency</h2>\n<p>In recent years, AI weather models (like Google's GraphCast or Huawei's Pangu-Weather) have taken the meteorological world by storm. They generate forecasts in seconds rather than hours, often matching or beating traditional models like ECMWF's IFS.</p>\n<p>However, these AI models have a hidden catch: <strong>they are trained on reanalysis datasets (like ERA5).</strong>\n*   <strong>What is Reanalysis?</strong> Reanalysis is created by taking historical raw observations and running them through a traditional physics-based NWP model (using a process called <em>data assimilation</em>) to create a complete, gridded historical map of the atmosphere.\n*   <strong>The Dependency:</strong> Because AI models train on this gridded reanalysis, they inherit any underlying biases, smoothing, and resolution limitations of the physics model. If you don't have access to expensive, high-resolution reanalysis datasets, you can't train or run the AI.</p>\n<hr />\n<h2>2. What is ObsCast?</h2>\n<p><strong>ObsCast</strong> is a new regional AI forecasting system designed to bypass NWPs entirely. It learns to map <strong>raw local observations</strong> (from weather stations, radar, and satellites) directly to future atmospheric states. </p>\n<p>It acts as both the <strong>Analysis</strong> (creating the initial state map) and the <strong>Forecast</strong> (predicting future states) in an end-to-end data-driven pipeline.</p>\n<pre><code class=\"language-mermaid\">graph TD\n    Obs[Raw Local Observations] --&gt;|ObsCast Analysis| InitState[Initial Grid State]\n    InitState --&gt;|ObsCast Forecast| FutState[Future Grid State]\n    FutState --&gt;|18-Hour Forecasts| Output[High-Resolution Weather Maps]\n</code></pre>\n<hr />\n<h2>3. How It Works (Didactically Explained)</h2>\n<p>Instead of interpolating sparse station readings using a physical model's equations, ObsCast uses a specialized neural network architecture to ingest irregular station readings and map them onto a regular grid.</p>\n<h3>Step A: Grid Ingestion &amp; Encoding</h3>\n<p>ObsCast takes sparse data points (e.g., a temperature reading from a station in Madrid, another from Barcelona) and encodes them using a <strong>Spatio-Temporal Spiking or Attention Network</strong>. It learns how geographical features (like elevation and coastal proximity) influence these local readings.</p>\n<h3>Step B: Autoregressive Forecasting</h3>\n<p>Once the initial state is mapped onto a high-resolution grid, a transformer-style network predicts future timesteps. The model rolls forward in time, predicting variables like:\n*   Temperature at 2 meters\n*   Wind speed at 10 meters\n*   High-resolution precipitation maps</p>\n<hr />\n<h2>4. Key Breakthroughs &amp; Results</h2>\n<p>ObsCast was tested over the contiguous United States (CONUS) and Europe, and the results are eye-opening:</p>\n<ol>\n<li><strong>Outperforms Physics Models in the Short-Term:</strong> For the first 18 hours of a forecast, ObsCast outperforms operational NWP models for near-surface variables.</li>\n<li><strong>Excellent Precipitation Forecasting:</strong> Historically, precipitation (rain/snow) has been the hardest variable for AI to predict because it is highly localized and intermittent. ObsCast's direct learning from radar and station gauges enables it to produce highly accurate rainfall maps.</li>\n<li><strong>Cheap and Adaptable:</strong> By removing the requirement for a supercomputer-run data assimilation pipeline, ObsCast allows smaller weather services or companies to build custom forecasting models using only their local sensor networks.</li>\n</ol>\n<hr />\n<h2>5. Summary &amp; Takeaways</h2>\n<p>ObsCast proves that <strong>deep learning models do not need physics models as a middleman.</strong> By training directly on real-world observations, AI can bypass the resolution bottlenecks and biases of traditional data assimilation, paving the way for hyper-local, low-cost regional weather services.</p>",
+    "authors": ["Antonio Pérez Velasco", "Antigravity AI"],
     "link": "https://arxiv.org/abs/2605.28153v1",
     "date": "2026-05-27",
     "category": "Weather Forecasting",
-    "type": "paper"
+    "type": "blog"
   },
   {
-    "id": "2605.24945v1",
-    "title": "RealBench: Benchmarking Data-Driven Numerical Weather Forecasting Under Operational Conditions and Extreme Event Challenges",
-    "summary": "Accurate evaluation of weather forecasting models is critical for their reliable deployment in real-world applications. However, existing benchmarks predominantly rely on reanalysis products such as ERA5, which are generated through delayed data assimilation and do not reflect the constraints of real-time operational forecasting, thereby resulting ...",
-    "full_content": "Accurate evaluation of weather forecasting models is critical for their reliable deployment in real-world applications. However, existing benchmarks predominantly rely on reanalysis products such as ERA5, which are generated through delayed data assimilation and do not reflect the constraints of real-time operational forecasting, thereby resulting in a systematic mismatch between benchmark performance and real-world forecasting. In this work, we introduce RealBench, a next-generation benchmark for AI weather forecasting that emphasizes realistic evaluation under operational conditions. RealBench features a strictly out-of-distribution test set spanning 2025 to eliminate data leakage and capture recent atmospheric regimes. It integrates multiple data sources, including low-latency operational analysis and a large-scale global in-situ observation dataset comprising over 10,000 stations, enabling direct evaluation against real atmospheric measurements. Beyond standard global metrics, RealBench provides a comprehensive evaluation framework for high-impact extreme events, including heatwaves, cold surges, and tropical cyclones, using event-specific metrics that better reflect real-world forecasting priorities. The evaluation results reveal substantial discrepancies between reanalysis-based metrics and real-world performance, particularly concerning extreme events. By highlighting the limitations of existing benchmarks, this work establishes a more faithful and operationally relevant evaluation paradigm, providing a rigorous foundation for advancing next-generation AI weather forecasting systems. The benchmark implementation is available at: https://github.com/lixruize-del/NWP-Benchmark.",
-    "authors": [
-      "Ruize Li",
-      "Zhibin Wen",
-      "Tao Han",
-      "Hao Chen",
-      "Fenghua Ling",
-      "Wei Zhang",
-      "Song Guo",
-      "Lei Bai"
-    ],
-    "link": "https://arxiv.org/abs/2605.24945v1",
-    "date": "2026-05-24",
-    "category": "Weather Forecasting",
-    "type": "paper"
-  },
-  {
-    "id": "2605.26130v1",
-    "title": "AirCast-SR: A Foundation Model for Kilometer-Scale Atmospheric Super-Resolution via Latent Consistency Diffusion",
-    "summary": "Operational weather prediction at kilometer scales remains computationally prohibitive for traditional numerical weather prediction (NWP) models, limiting forecast access for applications in energy, agriculture, and disaster management that require fine-grained spatiotemporal detail. Here we introduce AirCast-SR, a foundation model for atmospheric ...",
-    "full_content": "Operational weather prediction at kilometer scales remains computationally prohibitive for traditional numerical weather prediction (NWP) models, limiting forecast access for applications in energy, agriculture, and disaster management that require fine-grained spatiotemporal detail. Here we introduce AirCast-SR, a foundation model for atmospheric super-resolution that downscales global AI weather forecasts from 0.25 degree (~28 km) to 1 km horizontal resolution at hourly temporal resolution, producing 67-hour forecasts of eight coupled surface variables simultaneously. EarthMind-SR employs a three-dimensional U-Net conditioned within a Latent Consistency Model (LCM) diffusion framework, trained on patch-based samples over the contiguous United States (CONUS) using GraphCast forecasts as input and NOAA's Analysis of Record for Calibration (AORC) as the target. The model achieves near-zero bias across all variables and lead times, and its radial power spectral density analysis demonstrates preservation of fine-scale atmospheric structure at wavelengths of 10 km to 100 km where coarser models lose spectral power. We validate EarthMind-SR across three CONUS case studies spanning winter, summer, and spring seasons, and demonstrate zero-shot global transferability over India and Germany using independent surface station observations without any retraining or fine-tuning. As an open-weights foundation model, EarthMind-SR establishes a new paradigm for kilometer-scale AI weather prediction and provides a platform for regional fine-tuning, distillation, and downstream applications in climate services and hazard forecasting.",
-    "authors": [
-      "Somnath Luitel",
-      "Manmeet Singh",
-      "Joshua Durkee",
-      "Abdullah Al Fahad",
-      "Naveen Sudharsan",
-      "Prabhjot Singh",
-      "Cenlin He",
-      "Harsh Kamath",
-      "Zong-Liang Yang",
-      "Krishnagopal Halder",
-      "Sandeep Juneja",
-      "Parthasarathi Mukhopadhyay",
-      "Saptarishi Dhanuka",
-      "Amit Kumar Srivastava"
-    ],
+    "id": "explanation-aircast-sr",
+    "title": "Didactic Breakdown: AirCast-SR — Kilometer-Scale Atmospheric Super-Resolution",
+    "summary": "A plain-language breakdown of the AirCast-SR foundation model (arXiv:2605.26130), explaining how it uses Latent Consistency Diffusion to downscale global weather forecasts to 1 km resolution.",
+    "full_content": "<h1>Didactic Breakdown: AirCast-SR — Kilometer-Scale Atmospheric Super-Resolution</h1>\n<p>Have you ever wondered how we can get localized, high-resolution weather forecasts without running extremely expensive regional physics models? In this article, we break down <strong>AirCast-SR</strong> (<a href=\"https://arxiv.org/abs/2605.26130v1\">arXiv:2605.26130</a>), a new foundation model for atmospheric super-resolution.</p>\n<hr />\n<h2>1. The Core Problem: The Kilometer-Scale Bottleneck</h2>\n<p>Global weather models (whether traditional NWPs or AI models like GraphCast) operate at a grid resolution of about <strong>25 to 28 kilometers</strong>. \n*   <strong>The Problem:</strong> While a 28 km grid is great for global patterns, it is too coarse for local decision-making. Local wind patterns, mountain climates, and city-level precipitation are shaped by geography at the <strong>1-kilometer</strong> scale.\n*   <strong>The Bottleneck:</strong> Running physical models at a 1 km scale globally is computationally impossible with current supercomputers. Regional models (like WRF) are used instead, but they are expensive, slow, and require complex configuration.</p>\n<hr />\n<h2>2. What is AirCast-SR?</h2>\n<p><strong>AirCast-SR</strong> is an AI foundation model that acts as an \"intelligent magnifying glass.\" It takes a 28 km global forecast as input and reconstructs it at a <strong>1 km resolution</strong>, matching the fine-scale details of NOAA's ground-truth observations.</p>\n<p>It does this for <strong>eight surface variables simultaneously</strong> (including temperature, wind speed, humidity, and pressure) over a 67-hour forecast horizon.</p>\n<pre><code>[Coarse 28 km Forecast] ───&gt; ┌───────────────────────────┐ ───&gt; [Detailed 1 km Forecast]\n                             │ AirCast-SR (LCM Diffusion)│\n[High-Res Topography]  ───&gt; └───────────────────────────┘\n</code></pre>\n<hr />\n<h2>3. How It Works: Latent Consistency Diffusion</h2>\n<p>How does the model add fine-scale detail without just \"blurring\" or making up random noise? It leverages a technique from modern generative image AI: <strong>Latent Consistency Models (LCM)</strong>.</p>\n<h3>Step A: The Diffusion Framework</h3>\n<p>Traditional diffusion models (like Midjourney or Stable Diffusion) start with random noise and gradually refine it over 20 to 50 steps to generate an image. In weather downscaling, a standard diffusion model would take too long to run operationally.\n*   <strong>The LCM Solution:</strong> AirCast-SR uses a <em>Latent Consistency Model</em> framework, which allows it to generate realistic, high-resolution details in <strong>just 1 or 2 steps</strong> by learning the shortcut path of the diffusion process.</p>\n<h3>Step B: Conditioned U-Net</h3>\n<p>The model uses a three-dimensional U-Net architecture. It is fed:\n1.  The coarse-resolution weather variables.\n2.  High-resolution topography maps (elevation data).\nThe model learns how wind flow interacts with mountain ridges, and how valleys trap heat, using these boundary conditions to place local weather phenomena exactly where they belong.</p>\n<hr />\n<h2>4. Key Breakthroughs &amp; Results</h2>\n<ul>\n<li><strong>Preservation of Fine-Scale Structure:</strong> Radial power spectral analysis shows that AirCast-SR preserves true physical atmospheric structures at wavelengths of 10 km to 100 km—features that coarse models smooth out completely.</li>\n<li><strong>Zero-Shot Global Transferability:</strong> Although trained on data over the United States, the model was tested over Germany and India <strong>without any retraining</strong> and still outperformed local baselines using only local terrain data.</li>\n<li><strong>Near-Zero Bias:</strong> Unlike simple interpolation methods that drift over time, AirCast-SR achieves stable, unbiased downscaling through the entire 67-hour forecast.</li>\n</ul>\n<hr />\n<h2>5. Summary &amp; Takeaways</h2>\n<p>AirCast-SR establishes a new paradigm for climate and weather downscaling. By using generative AI trained on high-quality observations, we can downscale global weather forecasts to kilometer-scale detail in seconds. This open-weights foundation model is a massive step forward for local agriculture, wind energy planning, and flood hazard mitigation.</p>",
+    "authors": ["Antonio Pérez Velasco", "Antigravity AI"],
     "link": "https://arxiv.org/abs/2605.26130v1",
     "date": "2026-05-20",
-    "category": "Weather Forecasting",
-    "type": "paper"
+    "category": "Downscaling",
+    "type": "blog"
   },
   {
-    "id": "2605.19366v1",
-    "title": "Accurate, Efficient, and Explainable Deep Learning Approaches for Environmental Science Problems",
-    "summary": "Environmental science plays a pivotal role in safeguarding ecosystems, a domain driven by large-scale, heterogeneous data. In the big data era, artificial intelligence (AI) has emerged as a transformative tool for learning patterns and supporting decision-making. This dissertation develops AI-based approaches tailored to complex environmental scien...",
-    "full_content": "Environmental science plays a pivotal role in safeguarding ecosystems, a domain driven by large-scale, heterogeneous data. In the big data era, artificial intelligence (AI) has emerged as a transformative tool for learning patterns and supporting decision-making. This dissertation develops AI-based approaches tailored to complex environmental science problems to achieve Environmental Intelligence, studying three specific challenges. First, we focus on flood prediction and management in coastal river systems. Conventional physics-based models are computationally intensive, limiting real-time application. To overcome this, we propose a deep learning (DL)-based model, WaLeF, for water level forecasting, and a forecast-informed DL model, FIDLAr, to manage water levels. Evaluated in a flood-prone coastal system in South Florida characterized by extreme rainfall and sea level fluctuations, FIDLAr outperforms baselines in accuracy and efficiency while providing interpretable outputs. Second, we target global weather prediction, which is challenged by massive data scale. Traditional physics methods are deterministic and computationally heavy. We propose CoDiCast, a conditional diffusion model tailored for probabilistic weather forecasting. Adapted from generative AI for predictive tasks, experiments show CoDiCast achieves accurate, efficient forecasts with explicit uncertainty quantification. Lastly, we address scientific question-answering in environmental science. When answering in-domain questions, large language models (LLMs) often suffer from hallucinations due to out-of-date or limited knowledge. While retrieval-augmented generation (RAG) retrieves domain-specific knowledge, existing methods trade off accuracy, efficiency, or explainability. We propose Hypercube-RAG, built on a structured text cube framework, which successfully exhibits all three properties simultaneously.",
-    "authors": ["Jimeng Shi"],
-    "link": "https://arxiv.org/abs/2605.19366v1",
-    "date": "2026-05-19",
-    "category": "Weather Forecasting",
-    "type": "paper"
-  },
-  {
-    "id": "2605.18333v1",
-    "title": "QLIF-CAST: Quantum Leaky-Integrate-and-Fire for Time-Series Weather Forecasting",
-    "summary": "Accurate and efficient time-series forecasting remains a challenging problem for both classical and quantum neural architectures, particularly in multivariate environmental settings. This work adapts the Quantum Leaky Integrate-and-Fire (QLIF) spiking neural network for time-series regression tasks, specifically short-term multivariate weather fore...",
-    "full_content": "Accurate and efficient time-series forecasting remains a challenging problem for both classical and quantum neural architectures, particularly in multivariate environmental settings. This work adapts the Quantum Leaky Integrate-and-Fire (QLIF) spiking neural network for time-series regression tasks, specifically short-term multivariate weather forecasting. We extend QLIF beyond classification and demonstrate its applicability to continuous-valued prediction problems. The QLIF-CAST model encodes neuron excitation states as single-qubit quantum superpositions, driven by Rx rotation gates and T1 relaxation decay, and is embedded within a hybrid quantum-classical recurrent architecture. We conduct two distinct evaluations. First, a controlled comparison against a parameter-matched classical LIF baseline on a multivariate weather dataset shows that QLIF-CAST achieves 15.4% lower MSE and 4.4% lower MAE, demonstrating that quantum neuronal dynamics reduce prediction error over classical equivalents. Second, a cross-domain comparative analysis with state-of-the-art quantum LSTM (QLSTM) and quantum neural network (QNN) models on air quality and wind speed benchmarks reveals that QLIF-CAST converges in up to 94% less training time, occupying a distinct position in the speed-error trade-off space. Hardware verification on IBM Marrakesh (156-qubit QPU) confirms reliable circuit execution with only 1.2% average deviation from simulation.",
-    "authors": [
-      "Alberto Marchisio",
-      "Aayan Ebrahim",
-      "Nouhaila Innan",
-      "Muhammad Kashif",
-      "Muhammad Shafique"
-    ],
-    "link": "https://arxiv.org/abs/2605.18333v1",
-    "date": "2026-05-18",
-    "category": "Weather Forecasting",
-    "type": "paper"
-  },
-  {
-    "id": "2605.14317v1",
-    "title": "Guided Diffusion Sampling for Precipitation Forecast Interventions",
-    "summary": "Extreme precipitation causes severe societal and economic damage, and weather control has long been discussed as a potential mitigation strategy. However, to the best of our knowledge, perturbation-based interventions for weather control using data-driven weather forecasting models have not yet been explored. While adversarial attacks also generate...",
-    "full_content": "Extreme precipitation causes severe societal and economic damage, and weather control has long been discussed as a potential mitigation strategy. However, to the best of our knowledge, perturbation-based interventions for weather control using data-driven weather forecasting models have not yet been explored. While adversarial attacks also generate perturbations that alter forecasts, they aim to exploit model artifacts and do not account for physical plausibility. In this paper, we propose a gradient-based guidance framework for precipitation-reduction interventions through diffusion sampling in diffusion-based weather forecasting models. Instead of directly perturbing atmospheric states, our method steers the diffusion sampling trajectory, enabling precipitation reduction while maintaining consistency with the atmospheric distribution. To assess physical plausibility, we evaluate from three perspectives: (i) vertical and variable-wise perturbation profiles, (ii) latent-space trajectory deviation, and (iii) cross-model transferability. Experiments on extreme precipitation events from WeatherBench2 demonstrate that our method achieves effective precipitation reduction while yielding more physically plausible interventions than adversarial perturbations.",
-    "authors": ["Ayumu Ueyama", "Kazuhiko Kawamoto", "Hiroshi Kera"],
-    "link": "https://arxiv.org/abs/2605.14317v1",
-    "date": "2026-05-14",
-    "category": "Weather Forecasting",
-    "type": "paper"
-  },
-  {
-    "id": "2605.12668v1",
-    "title": "Online Conformal Prediction: Enforcing monotonicity via Online Optimization",
-    "summary": "Conformal prediction provides a principled framework for uncertainty quantification with finite-sample coverage guarantees. While recent work has extended conformal prediction to online and sequential settings, existing methods typically focus on a single coverage level and do not ensure consistency across multiple confidence levels. In many real-w...",
-    "full_content": "Conformal prediction provides a principled framework for uncertainty quantification with finite-sample coverage guarantees. While recent work has extended conformal prediction to online and sequential settings, existing methods typically focus on a single coverage level and do not ensure consistency across multiple confidence levels. In many real-world applications, such as weather forecasting, macroeconomic prediction, and risk management, different users operate under heterogeneous risk tolerances and require calibrated uncertainty estimates across a range of coverage levels. In such settings, it is desirable to produce prediction sets corresponding to different coverage levels that are nested and valid simultaneously. In this paper, we propose two novel online conformal prediction methods that output \\emph{nested prediction sets} across a range of coverage levels, enabling simultaneous uncertainty quantification across the entire risk spectrum. Beyond interpretability, jointly estimating multiple coverage levels is known to improve statistical efficiency in classical quantile regression by enforcing non-crossing constraints and sharing information across quantiles. Our approaches leverage an online optimization perspective with small regret that translates to quantile estimation error control while enforcing nestedness of prediction sets. Empirical results on synthetic and real-world datasets, including applications in forecasting tasks with heterogeneous risk requirements, demonstrate that our method achieves stable coverage across all levels, strictly nested prediction sets, and improved efficiency compared to existing online conformal baselines.",
-    "authors": ["Eduardo Ochoa Rivera", "Ambuj Tewari"],
-    "link": "https://arxiv.org/abs/2605.12668v1",
-    "date": "2026-05-12",
-    "category": "Weather Forecasting",
-    "type": "paper"
-  },
-  {
-    "id": "2605.06916v1",
-    "title": "Tyche: One Step Flow for Efficient Probabilistic Weather Forecasting",
-    "summary": "Probabilistic weather forecasting requires not only accurate trajectories, but calibrated distributions over plausible atmospheric futures. Recent data-driven systems have achieved remarkable deterministic skill, and diffusion-based ensemble forecasters have substantially improved sample realism and uncertainty quantification. However, their infere...",
-    "full_content": "Probabilistic weather forecasting requires not only accurate trajectories, but calibrated distributions over plausible atmospheric futures. Recent data-driven systems have achieved remarkable deterministic skill, and diffusion-based ensemble forecasters have substantially improved sample realism and uncertainty quantification. However, their inference cost scales with forecast horizon, ensemble size, and the number of denoising steps required for each transition, making large operational ensembles expensive. To address this, we present Tyche, a one-step conditional flow model for efficient probabilistic weather forecasting. Tyche models the conditional forecast distribution with a destination-aware average-velocity flow that maps Gaussian noise directly to future weather states in a single function evaluation (1-NFE). To make this one-step transport learnable in high-dimensional geophysical fields, we derive a JVP-regularized rectification objective that enforces temporal self-consistency across source and destination flow timesteps without explicitly forming Jacobians. The transport field is parameterized by an isotropic Swin-style transformer that preserves fine-scale spatial structure while remaining scalable on global grids. To improve ensemble reliability under autoregressive forecasting, we further introduce a rollout-based finetuning stage with curriculum CRPS calibration supervision. Experiments on ERA5 at 1.5$^\\circ$ and 6-hour resolution show that our Tyche, using merely a single NFE, matches or exceeds the forecast skill and calibration of state-of-the-art multi-step generative baselines and the operational ECMWF IFS ensemble.",
-    "authors": [
-      "Fan Xu",
-      "Yuan Gao",
-      "Kun Wang",
-      "Rui Su",
-      "Fenghua Ling",
-      "Hao Wu",
-      "Wanli Ouyang"
-    ],
-    "link": "https://arxiv.org/abs/2605.06916v1",
-    "date": "2026-05-07",
-    "category": "Weather Forecasting",
-    "type": "paper"
-  },
-  {
-    "id": "2605.05912v1",
-    "title": "From Drops to Grid: Noise-Aware Spatio-Temporal Neural Process for Rainfall Estimation",
-    "summary": "High-resolution rainfall observations are crucial for weather forecasting, water management, and hazard mitigation. Traditional operational measurements are often biased and low-resolution, limiting their ability to capture local rainfall. Accurate high-resolution rainfall maps require integrating sparse surface observations, yet existing deep lear...",
-    "full_content": "High-resolution rainfall observations are crucial for weather forecasting, water management, and hazard mitigation. Traditional operational measurements are often biased and low-resolution, limiting their ability to capture local rainfall. Accurate high-resolution rainfall maps require integrating sparse surface observations, yet existing deep learning densification methods are hindered by rainfall's skewed, localized nature, noise, and limited spatio-temporal fusion. We present DropsToGrid, a Neural Process-based method that generates dense rainfall fields by fusing temporal sequences from noisy, irregularly distributed private weather stations with spatial context from radar. Leveraging multi-scale feature extraction, temporal attention, and multi-modal fusion, the model produces stochastic, continuous rainfall estimates and explicitly quantifies uncertainty. Evaluations on real-world datasets demonstrate that DropsToGrid outperforms both operational and deep learning baselines, generating accurate high-resolution rainfall maps with well-calibrated uncertainty, even when only few stations are available and in cross-regional scenarios.",
-    "authors": [
-      "Rafael Pablos Sarabia",
-      "Joachim Nyborg",
-      "Morten Birk",
-      "Ira Assent"
-    ],
-    "link": "https://arxiv.org/abs/2605.05912v1",
-    "date": "2026-05-07",
-    "category": "Weather Forecasting",
-    "type": "paper"
-  },
-  {
-    "id": "2605.01126v1",
-    "title": "Extreme Weather Bench: A framework and benchmark for evaluation of high-impact weather",
-    "summary": "Forecasting the wide variety of high-impact weather events experienced globally is a challenge for both Artificial Intelligence (AI) and Numerical Weather Prediction (NWP) models and it is critical that such models be properly verified before deployment. Although AI weather models are rapidly evolving, much of their evaluation is currently done eit...",
-    "full_content": "Forecasting the wide variety of high-impact weather events experienced globally is a challenge for both Artificial Intelligence (AI) and Numerical Weather Prediction (NWP) models and it is critical that such models be properly verified before deployment. Although AI weather models are rapidly evolving, much of their evaluation is currently done either with a global-scale evaluation or by hand-picking a small number of case studies or a region. A widely-used open-source benchmark suite focusing on high-impact weather will help to drive the science forward for all scales of weather models, as it has for other AI fields. Here we introduce Extreme Weather Bench (EWB), a new community-driven benchmark suite that facilitates model validation and verification on a variety of high-impact hazards that matter to people around the globe. EWB provides a standard set of case studies (spanning across multiple spatial and temporal scales and different parts of the weather spectrum), observational data, impact-based metrics, and open-source code for users to evaluate their models. Verifying that a model works against a standard set of case studies, especially events that are high-impact for the general public, is a key piece of improving the trustworthiness of AI models. EWB will help to drive the science forward for all weather models, enabling true comparisons across models and evaluating models on specific high-impact phenomena through the use of case studies. EWB is a free open-source community-driven system and will continue to evolve to include additional phenomena, test cases and metrics in collaboration with the worldwide weather and forecast verification community.",
-    "authors": [
-      "Amy McGovern",
-      "Taylor Mandelbaum",
-      "Daniel Rothenberg",
-      "Nicholas Loveday",
-      "Corey Potvin",
-      "Montgomery Flora",
-      "Linus Magnusson",
-      "Eric Gilleland",
-      "John Allen"
-    ],
-    "link": "https://arxiv.org/abs/2605.01126v1",
-    "date": "2026-05-01",
-    "category": "Weather Forecasting",
-    "type": "paper"
+    "id": "explanation-pbc",
+    "title": "Didactic Breakdown: Probabilistic Bias Correction for Subseasonal Forecasts",
+    "summary": "A plain-language breakdown of the Probabilistic Bias Correction (PBC) framework (arXiv:2604.16238), explaining how machine learning can rescue subseasonal weather forecasts from systematic errors.",
+    "full_content": "<h1>Didactic Breakdown: Probabilistic Bias Correction (PBC) for Subseasonal Forecasts</h1>\n<p>Why do weather forecasts become so unreliable beyond two weeks, and how can we use machine learning to fix them? In this article, we break down the <strong>Probabilistic Bias Correction (PBC)</strong> framework (<a href=\"https://arxiv.org/abs/2604.16238v1\">arXiv:2604.16238</a>), a machine learning system that recently won the ECMWF real-time forecasting competition.</p>\n<hr />\n<h2>1. The Core Problem: The 2-to-6 Week \"Blind Spot\"</h2>\n<p>Weather forecasting has two main regimes:\n1.  <strong>Short-term Weather Forecasting (0–14 days):</strong> Driven by atmospheric physics. Highly accurate.\n2.  <strong>Long-term Climate Projections (months/years):</strong> Driven by boundary conditions (ocean temperatures, solar radiation). Useful for identifying broad trends.</p>\n<p>Between these two lies the <strong>Subseasonal Scale (2 to 6 weeks ahead)</strong>. This is a notorious \"blind spot\" in meteorology.\n*   <strong>The Issue:</strong> At this scale, the atmosphere's chaotic nature has erased the memory of initial conditions (so short-term physics models fail), but boundary conditions haven't had enough time to dominate (so climate models fail).\n*   <strong>Compounding Errors:</strong> As physical models run forward, small initial errors compound daily, creating massive systematic errors and biases in temperature, wind, and rain predictions.</p>\n<hr />\n<h2>2. What is Probabilistic Bias Correction (PBC)?</h2>\n<p><strong>PBC</strong> is a machine learning framework that acts as a \"calibrating filter.\" Instead of trying to run a better physics simulation, it looks at the <em>outputs</em> of existing physical and AI models, identifies their historical pattern of errors, and mathematically corrects them.</p>\n<p>Importantly, it doesn't just predict a single corrected value (e.g., \"it will be 22°C\"); it corrects the <strong>entire probability distribution</strong> (e.g., \"there is a 10% chance of a heatwave, 80% chance of normal temperature, 10% chance of cold\").</p>\n<pre><code>┌────────────────────────┐\n│ Raw Model Forecast     │ ───&gt; [ Biased, Uncalibrated Distribution ]\n└────────────────────────┘\n                                               │\n                                               ▼\n                               ┌────────────────────────┐\n                               │  PBC Machine Learning  │\n                               └────────────────────────┘\n                                               │\n                                               ▼\n                                      [ Calibrated, Skillful ]\n                                      [ Probability Forecast ]\n</code></pre>\n<hr />\n<h2>3. How It Works: Learning from Past Mistakes</h2>\n<p>PBC is trained on historical pairs of <strong>forecasts vs. actual observations</strong>. </p>\n<h3>Step A: Feature Extraction</h3>\n<p>The model is fed:\n*   The raw forecast ensemble (the range of predictions from the physical/AI model).\n*   The calendar date (to capture seasonal cycles).\n*   Geographical coordinates.</p>\n<h3>Step B: Distribution Mapping</h3>\n<p>It uses a specialized machine learning architecture (such as Quantile Regression or Normalizing Flows) to map the raw forecast distribution to a corrected, calibrated distribution. It automatically learns, for example, that \"when the physical model predicts heavy rain in May over Alicante, it is usually 30% too wet and 2 days too early.\"</p>\n<hr />\n<h2>4. Key Breakthroughs &amp; Results</h2>\n<p>The performance of PBC in real-world testing and competitions is stellar:</p>\n<ol>\n<li><strong>Skill Doubling:</strong> When applied to ECMWF’s AI Forecasting System (AIFS), PBC <strong>doubled</strong> its subseasonal forecast skill.</li>\n<li><strong>Universal Improvement:</strong> It improved the forecast accuracy of the dynamical models for <strong>91% of pressure targets, 92% of temperature targets, and 98% of precipitation targets</strong>.</li>\n<li><strong>Competition Winner:</strong> In the 2025 ECMWF Real-Time Forecasting Competition, global forecasts calibrated with PBC placed <strong>first worldwide</strong> across all weather variables and lead times, beating 34 teams of meteorological experts.</li>\n</ol>\n<hr />\n<h2>5. Summary &amp; Takeaways</h2>\n<p>Subseasonal forecasts are critical for agricultural planning, wildfire mitigation, and energy grid allocation. PBC demonstrates that we do not need to wait for larger supercomputers or more complex physics equations to solve the subseasonal \"blind spot.\" By using machine learning to learn from historical forecast errors, we can immediately calibrate existing forecasts, making them highly reliable tools for decision-makers.</p>",
+    "authors": ["Antonio Pérez Velasco", "Antigravity AI"],
+    "link": "https://arxiv.org/abs/2604.16238v1",
+    "date": "2026-04-17",
+    "category": "Subseasonal to Seasonal Forecasting",
+    "type": "blog"
   }
 ]

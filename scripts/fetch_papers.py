@@ -1,17 +1,28 @@
 """
-Fetch relevant geoscience and meteorology papers from the arXiv API.
+Fetch relevant geoscience and meteorology papers from arXiv RSS feeds.
 
-This script queries arXiv for papers on specific weather, climate, and downscaling
-topics, filters them using custom relevance heuristics (e.g. whitelist/blacklist),
-and returns the compiled list of papers.
+This script parses the arXiv daily RSS feeds for physics.ao-ph, physics.geo-ph,
+and cs.LG categories, filters them using custom relevance heuristics
+(whitelist/blacklist keyword scoring), and returns a balanced list of papers
+across predefined topics.
 """
 
 import time
-import urllib.parse
 import xml.etree.ElementTree as ET
 from typing import Any, Dict, List, Optional
+from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
 
-import requests
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
+# RSS feed URLs (reliable, no rate-limiting)
+RSS_FEEDS: List[str] = [
+    "https://rss.arxiv.org/rss/physics.ao-ph",
+    "https://rss.arxiv.org/rss/physics.geo-ph",
+    "https://rss.arxiv.org/rss/cs.LG",
+]
 
 # Topics list
 TOPICS: List[str] = [
@@ -22,142 +33,158 @@ TOPICS: List[str] = [
     "Downscaling",
 ]
 
+# Maximum papers per category to ensure balance
+MAX_PER_CATEGORY: int = 5
 
-def fetch_arxiv_papers(query: str, max_results: int = 15) -> List[Dict[str, Any]]:
+# RSS XML namespaces
+_NS: Dict[str, str] = {
+    "arxiv": "http://arxiv.org/schemas/atom",
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "content": "http://purl.org/rss/1.0/modules/content/",
+}
+
+
+def fetch_rss_feed(url: str, timeout: int = 20) -> Optional[str]:
     """
-    Fetch papers from arXiv API for a given search query.
-
-    Queries the arXiv API syndication XML feed and extracts details of
-    the matching papers, returning a list of structured dictionaries.
-    Includes a retry mechanism with backoff for transient timeouts.
+    Fetch the raw XML content of an arXiv RSS feed.
 
     Parameters
     ----------
-    query : str
-        The arXiv-formatted search query string.
-    max_results : int, default 15
-        The maximum number of results to fetch for this query.
+    url : str
+        The RSS feed URL to fetch.
+    timeout : int, default 20
+        HTTP request timeout in seconds.
+
+    Returns
+    -------
+    str or None
+        The raw XML string, or None if the request failed.
+    """
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (compatible; pereza-blog/1.0; +https://github.com/pereza)"
+        }
+        import urllib.request
+
+        req = urllib.request.Request(url, headers=headers)
+        with urlopen(req, timeout=timeout) as response:
+            return response.read().decode("utf-8")
+    except (URLError, HTTPError) as e:
+        print(f"  Failed to fetch RSS feed {url}: {e}")
+        return None
+
+
+def parse_rss_items(xml_content: str) -> List[Dict[str, Any]]:
+    """
+    Parse arXiv RSS XML and extract paper items.
+
+    Extracts title, abstract (description), link, authors, and publish date
+    from each <item> element in the RSS channel.
+
+    Parameters
+    ----------
+    xml_content : str
+        The raw XML string of an arXiv RSS feed.
 
     Returns
     -------
     list[dict[str, Any]]
-        A list of paper dictionaries, each containing 'id', 'title', 'summary',
-        'published', 'authors', and 'link'.
+        A list of raw paper dictionaries with keys:
+        'id', 'title', 'summary', 'link', 'authors', 'published'.
     """
-    base_url: str = "http://export.arxiv.org/api/query"
-    params: Dict[str, str] = {
-        "search_query": query,
-        "max_results": str(max_results),
-        "sortBy": "submittedDate",
-        "sortOrder": "descending",
-    }
-    url: str = f"{base_url}?{urllib.parse.urlencode(params)}"
-
     papers: List[Dict[str, Any]] = []
 
-    max_retries: int = 3
-    timeout_seconds: float = 25.0
+    try:
+        root = ET.fromstring(xml_content)
+    except ET.ParseError as e:
+        print(f"  XML parse error: {e}")
+        return papers
 
-    for attempt in range(max_retries):
-        try:
-            response: requests.Response = requests.get(url, timeout=timeout_seconds)
+    channel = root.find("channel")
+    if channel is None:
+        return papers
 
-            # If rate limited (503 or 429), wait and retry
-            if response.status_code in (503, 429):
-                wait_time: float = 8.0 * (attempt + 1)
-                print(
-                    f"arXiv API returned {response.status_code}. "
-                    f"Retrying in {wait_time}s..."
-                )
-                time.sleep(wait_time)
-                continue
+    for item in channel.findall("item"):
+        title_el = item.find("title")
+        link_el = item.find("link")
+        desc_el = item.find("description")
+        guid_el = item.find("guid")
 
-            if response.status_code != 200:
-                print(
-                    f"arXiv API returned status code {response.status_code} "
-                    f"for query '{query[:40]}...'"
-                )
-                return papers
+        if title_el is None or desc_el is None:
+            continue
 
-            root: ET.Element = ET.fromstring(response.content)
-            # XML namespace for Atom feed
-            ns: Dict[str, str] = {"atom": "http://www.w3.org/2005/Atom"}
+        title: str = (title_el.text or "").strip()
+        link: str = (link_el.text or "").strip() if link_el is not None else ""
 
-            for entry in root.findall("atom:entry", ns):
-                # Extract id
-                paper_id_elem: Optional[ET.Element] = entry.find("atom:id", ns)
-                paper_id: str = (
-                    paper_id_elem.text.strip() if paper_id_elem is not None else ""
-                )
+        # Extract paper ID from guid (format: oai:arXiv.org:XXXX.XXXXX[vN])
+        arxiv_id: str = ""
+        if guid_el is not None and guid_el.text:
+            guid_text: str = guid_el.text.strip()
+            if "arXiv.org:" in guid_text:
+                raw_id = guid_text.split("arXiv.org:")[-1]
+                # Strip version suffix if present
+                arxiv_id = raw_id.split("v")[0] if "v" in raw_id else raw_id
 
-                # Extract title and clean whitespace
-                title_elem: Optional[ET.Element] = entry.find("atom:title", ns)
-                title: str = (
-                    " ".join(title_elem.text.split())
-                    if title_elem is not None
-                    else "No Title"
-                )
+        # Description contains "arXiv:XXXX.XXXXXvN Announce Type: new\nAbstract: ..."
+        raw_desc: str = (desc_el.text or "").strip()
+        # Strip the "arXiv:... Announce Type: ... Abstract:" header
+        abstract: str = raw_desc
+        if "Abstract:" in raw_desc:
+            abstract = raw_desc.split("Abstract:", 1)[-1].strip()
+        # Clean up whitespace
+        abstract = " ".join(abstract.split())
 
-                # Extract summary (abstract)
-                summary_elem: Optional[ET.Element] = entry.find("atom:summary", ns)
-                summary: str = (
-                    " ".join(summary_elem.text.split())
-                    if summary_elem is not None
-                    else ""
-                )
+        # Authors from dc:creator
+        authors_el = item.find("dc:creator", _NS)
+        authors: List[str] = []
+        if authors_el is not None and authors_el.text:
+            authors = [a.strip() for a in authors_el.text.split(",") if a.strip()]
 
-                # Extract published date
-                published_elem: Optional[ET.Element] = entry.find("atom:published", ns)
-                published: str = (
-                    published_elem.text.strip() if published_elem is not None else ""
-                )
+        # Publication date from pubDate
+        pub_date: str = ""
+        pub_date_el = item.find("pubDate")
+        if pub_date_el is not None and pub_date_el.text:
+            # Convert "Thu, 28 May 2026 00:00:00 -0400" to "2026-05-28"
+            try:
+                from email.utils import parsedate
 
-                # Extract authors
-                authors: List[str] = []
-                for author in entry.findall("atom:author", ns):
-                    name_elem: Optional[ET.Element] = author.find("atom:name", ns)
-                    if name_elem is not None:
-                        authors.append(name_elem.text.strip())
+                parsed = parsedate(pub_date_el.text)
+                if parsed:
+                    pub_date = f"{parsed[0]:04d}-{parsed[1]:02d}-{parsed[2]:02d}"
+            except Exception:
+                pub_date = ""
 
-                # Extract primary alternate link
-                link: str = paper_id
-                for link_elem in entry.findall("atom:link", ns):
-                    if link_elem.attrib.get("rel") == "alternate":
-                        link = link_elem.attrib.get("href", link)
-                        break
+        if not pub_date:
+            from datetime import date
 
-                papers.append(
-                    {
-                        "id": paper_id,
-                        "title": title,
-                        "summary": summary,
-                        "published": published,
-                        "authors": authors,
-                        "link": link,
-                    }
-                )
+            pub_date = date.today().isoformat()
 
-            # If successful, break retry loop
-            break
+        if not title or not abstract:
+            continue
 
-        except requests.exceptions.RequestException as e:
-            if attempt == max_retries - 1:
-                print(
-                    f"Error fetching papers for query '{query[:60]}...': "
-                    f"{e} after {max_retries} attempts"
-                )
-            else:
-                wait_time = 3.0 * (attempt + 1)
-                print(
-                    f"Request failed/timed out for query '{query[:40]}...'. "
-                    f"Retrying in {wait_time}s..."
-                )
-                time.sleep(wait_time)
+        # Construct arXiv link if missing
+        if not link and arxiv_id:
+            link = f"https://arxiv.org/abs/{arxiv_id}"
+
+        entry_id: str = f"https://arxiv.org/abs/{arxiv_id}" if arxiv_id else link
+
+        papers.append(
+            {
+                "id": entry_id,
+                "title": title,
+                "summary": abstract,
+                "link": link,
+                "authors": authors,
+                "published": pub_date,
+            }
+        )
 
     return papers
 
 
-def categorize_paper(title: str, summary: str) -> str:
+def categorize_paper(
+    title: str, summary: str, default_category: str = "Weather Forecasting"
+) -> str:
     """
     Categorize a paper into one of the predefined geoscience topics.
 
@@ -170,6 +197,8 @@ def categorize_paper(title: str, summary: str) -> str:
         The title of the paper.
     summary : str
         The abstract or summary of the paper.
+    default_category : str, default "Weather Forecasting"
+        The fallback category if no strong topic keywords match.
 
     Returns
     -------
@@ -178,27 +207,58 @@ def categorize_paper(title: str, summary: str) -> str:
     """
     text: str = (title + " " + summary).lower()
 
-    # Topic keywords matching
-    scores: Dict[str, int] = {
-        "Weather Forecasting": text.count("weather forecast")
-        + text.count("weather prediction")
-        + text.count("forecasting") * 0.5,
-        "Subseasonal to Seasonal Forecasting": text.count("subseasonal")
-        + text.count("seasonal forecasting")
-        + text.count("s2s"),
-        "Climate Emulation": text.count("emulator")
-        + text.count("emulation")
-        + text.count("climate model emulator"),
-        "Data Assimilation": text.count("data assimilation")
-        + text.count("state estimation"),
-        "Downscaling": text.count("downscaling")
-        + text.count("super-resolution")
-        + text.count("spatial resolution"),
+    scores: Dict[str, float] = {
+        "Weather Forecasting": (
+            text.count("weather forecast") * 3.0
+            + text.count("weather prediction") * 3.0
+            + text.count("nowcasting") * 2.5
+            + text.count("precipitation forecast") * 2.0
+            + text.count("numerical weather") * 2.5
+            + text.count("nwp") * 2.0
+            + text.count("forecasting") * 0.5
+        ),
+        "Subseasonal to Seasonal Forecasting": (
+            text.count("subseasonal") * 3.0
+            + text.count("seasonal forecast") * 3.0
+            + text.count("s2s") * 3.0
+            + text.count("seasonal prediction") * 3.0
+            + text.count("interannual") * 2.0
+            + text.count("el nino") * 2.0
+            + text.count("enso") * 2.0
+        ),
+        "Climate Emulation": (
+            text.count("emulator") * 3.0
+            + text.count("emulation") * 3.0
+            + text.count("climate model emulator") * 4.0
+            + text.count("climate emulator") * 4.0
+            + text.count("earth system model") * 2.5
+            + text.count("coupled") * 1.5
+            + text.count("cmip") * 2.0
+            + text.count("gcm") * 2.0
+        ),
+        "Data Assimilation": (
+            text.count("data assimilation") * 4.0
+            + text.count("state estimation") * 2.0
+            + text.count("kalman filter") * 2.5
+            + text.count("variational") * 2.0
+            + text.count("ensemble kalman") * 3.0
+            + text.count("4dvar") * 3.0
+            + text.count("3dvar") * 3.0
+        ),
+        "Downscaling": (
+            text.count("downscaling") * 4.0
+            + text.count("super-resolution") * 3.0
+            + text.count("spatial resolution") * 2.0
+            + text.count("temporal disaggregation") * 3.0
+            + text.count("rainfall disaggregation") * 3.0
+            + text.count("bias correction") * 2.5
+            + text.count("bias adjustment") * 2.5
+            + text.count("statistical downscaling") * 4.0
+            + text.count("dynamical downscaling") * 4.0
+        ),
     }
 
-    # Pick the category with the highest non-zero score,
-    # defaulting to "Weather Forecasting".
-    best_category: str = "Weather Forecasting"
+    best_category: str = default_category
     max_score: float = 0.0
     for topic, score in scores.items():
         if score > max_score:
@@ -210,11 +270,11 @@ def categorize_paper(title: str, summary: str) -> str:
 
 def is_relevant_geoscience(title: str, summary: str) -> bool:
     """
-    Determine relevance of a paper using a weighted scoring engine.
+    Determine relevance of a paper to weather, climate, and geoscience.
 
-    Computes a score based on positive and negative keyword occurrences in
-    the title and abstract (summary), giving higher weight to title matches.
-    The paper is considered relevant if the final score exceeds a threshold.
+    Computes a weighted score from positive and negative keyword occurrences
+    in the title (higher weight) and abstract. Papers must reach a threshold
+    to be included.
 
     Parameters
     ----------
@@ -233,7 +293,6 @@ def is_relevant_geoscience(title: str, summary: str) -> bool:
 
     score: float = 0.0
 
-    # 1. Negative keywords (immediate penalty, can quickly drive score below threshold)
     negatives: Dict[str, float] = {
         # Space weather & upper atmosphere
         "space weather": -10.0,
@@ -243,33 +302,32 @@ def is_relevant_geoscience(title: str, summary: str) -> bool:
         "magnetosphere": -10.0,
         "ionosphere": -10.0,
         "coronal mass": -10.0,
-        "geomagnetic": -10.0,
+        "geomagnetic": -8.0,
         # Medical & biological
         "retinopathy": -15.0,
-        "medical": -15.0,
+        "medical imaging": -15.0,
         "clinical": -15.0,
         "biomedical": -15.0,
-        "brain": -15.0,
         "cancer": -15.0,
         "tumor": -15.0,
-        "mri": -15.0,
+        "mri": -12.0,
         "ultrasound": -15.0,
         "cardiac": -15.0,
         "retinal": -15.0,
-        "disease": -10.0,
+        "disease": -8.0,
+        "pathology": -12.0,
         # Chemistry & materials science
         "interatomic": -12.0,
-        "molecule": -12.0,
-        "molecular": -12.0,
+        "molecule": -10.0,
+        "molecular dynamics": -12.0,
         "protein": -12.0,
         "drug": -12.0,
         "polymer": -12.0,
         "catalysis": -12.0,
-        "materials science": -12.0,
-        "crystallography": -12.0,
         "nanoparticle": -12.0,
+        "crystallography": -12.0,
         # Astronomy & high-energy physics
-        "quantum": -10.0,
+        "quantum": -8.0,
         "cosmology": -10.0,
         "galaxy": -10.0,
         "stellar": -10.0,
@@ -277,252 +335,198 @@ def is_relevant_geoscience(title: str, summary: str) -> bool:
         "black hole": -10.0,
         "astronomy": -10.0,
         "astrophysical": -10.0,
+        # General ML not geoscience-related
+        "reinforcement learning": -5.0,
+        "natural language": -6.0,
+        "text generation": -8.0,
+        "large language model": -6.0,
+        "fraud detection": -15.0,
+        "financial": -10.0,
+        "stock market": -12.0,
+        "sparse autoencoder": -10.0,
+        "turing complete": -10.0,
+        "federated learning": -6.0,
+        "recommendation system": -10.0,
+        "routing": -4.0,
+        "token routing": -10.0,
+        "social network": -10.0,
+        "internet of things": -10.0,
+        "iot": -8.0,
+        "lunar rover": -15.0,
+        "worker disagreement": -10.0,
+        "graph neural": -3.0,
     }
 
     for keyword, penalty in negatives.items():
         if keyword in title_lower:
             score += penalty * 1.5
-        if keyword in summary_lower:
+        elif keyword in summary_lower:
             score += penalty
 
-    # 2. Positive keywords (adds relevance points)
     positives: Dict[str, float] = {
-        # Core topics & Methods
-        "weather forecast": 5.0,
-        "weather forecasting": 5.0,
-        "numerical weather prediction": 5.0,
-        "nwp": 4.0,
-        "climate emulation": 5.0,
-        "climate emulator": 5.0,
-        "model emulator": 4.0,
-        "climate model": 3.0,
-        "subseasonal": 5.0,
-        "seasonal forecast": 5.0,
-        "s2s": 4.0,
-        "downscaling": 5.0,
-        "spatial downscaling": 5.0,
-        "statistical downscaling": 5.0,
-        "dynamical downscaling": 5.0,
-        "empirical downscaling": 5.0,
-        "temporal downscaling": 5.0,
-        "temporal disaggregation": 5.0,
-        "rainfall disaggregation": 5.0,
-        "bias correction": 4.0,
-        "bias adjustment": 4.0,
-        "super-resolution": 4.0,
-        "postprocessing": 3.0,
-        "post-processing": 3.0,
-        "data assimilation": 5.0,
-        "state estimation": 3.0,
-        # Quantile-based adjustments
-        "quantile mapping": 4.0,
-        "quantile delta mapping": 4.0,
-        "scaled distribution mapping": 4.0,
-        "presrat": 3.0,
-        "presrate": 3.0,
-        "bias correction spatial disaggregation": 4.0,
-        "bcsd": 3.5,
-        # Generative & DL architectures
-        "generative adversarial": 3.0,
-        "gan": 2.5,
-        "gans": 2.5,
-        "vae-gan": 3.0,
-        "vae-gans": 3.0,
+        # Core topics
+        "weather forecast": 6.0,
+        "weather forecasting": 6.0,
+        "numerical weather prediction": 6.0,
+        "nwp": 5.0,
+        "climate emulation": 6.0,
+        "climate emulator": 6.0,
+        "model emulator": 5.0,
+        "earth system model": 4.0,
+        "subseasonal": 6.0,
+        "seasonal forecast": 6.0,
+        "s2s": 5.0,
+        "downscaling": 6.0,
+        "spatial downscaling": 6.0,
+        "statistical downscaling": 6.0,
+        "temporal downscaling": 6.0,
+        "temporal disaggregation": 6.0,
+        "rainfall disaggregation": 6.0,
+        "bias correction": 5.0,
+        "bias adjustment": 5.0,
+        "super-resolution": 5.0,
+        "postprocessing": 4.0,
+        "data assimilation": 6.0,
+        "state estimation": 4.0,
+        "ensemble kalman": 6.0,
+        "4dvar": 6.0,
+        "3dvar": 6.0,
+        # Methods
         "diffusion model": 3.0,
-        "diffusion models": 3.0,
         "transformer": 2.5,
-        "transformers": 2.5,
-        "uformer": 3.0,
-        "swinir": 3.0,
+        "generative adversarial": 3.0,
         "unet": 2.0,
-        "rcan": 3.0,
-        "residual channel attention": 3.0,
-        "lstm": 2.0,
-        "lstms": 2.0,
-        "convolutional lstm": 3.0,
-        "deep residual network": 3.0,
-        "srdrn": 3.0,
         "autoencoder": 2.0,
-        "autoencoders": 2.0,
-        "physically constrained": 3.0,
-        "transfer learning": 2.0,
-        "multi-task sparse structure learning": 3.5,
-        "mssl": 3.0,
-        # Supporting meteorology / climate concepts
+        "lstm": 2.0,
+        # Meteorology / Climate terms
         "reanalysis": 4.0,
-        "era5": 4.0,
+        "era5": 5.0,
         "cerra": 5.0,
-        "cams": 3.0,
-        "nowcasting": 4.0,
-        "precipitation nowcasting": 4.0,
+        "nowcasting": 5.0,
         "precipitation": 3.0,
         "rainfall": 3.0,
-        "monsoon": 3.0,
+        "monsoon": 4.0,
         "temperature": 2.0,
-        "wind speed": 3.0,
-        "el nino": 3.0,
+        "wind speed": 3.5,
+        "el nino": 4.0,
+        "enso": 4.0,
         "sea surface temperature": 4.0,
-        "sst": 2.0,
+        "sst": 2.5,
         "climate change": 3.0,
         "climatology": 3.0,
-        "meteorology": 3.0,
-        "meteorological": 3.0,
+        "meteorology": 4.0,
+        "meteorological": 4.0,
         "atmosphere": 2.0,
-        "atmospheric": 2.0,
+        "atmospheric": 2.5,
         "oceanic": 2.0,
-        "hydrology": 2.0,
-        "hydrological": 2.0,
-        "geoscience": 2.0,
-        "geoscientific": 2.0,
-        "constructed analog": 3.0,
-        # Hazards and extreme indicators
-        "extreme precipitation": 4.0,
-        "extreme events": 3.0,
-        "extremes": 2.0,
-        "flash floods": 4.0,
-        "flash flood": 4.0,
-        "compound flooding": 4.0,
-        "compound extreme": 4.0,
-        "storm surge": 3.0,
-        "storm surges": 3.0,
-        "dry spells": 3.0,
-        "dry spell": 3.0,
-        "idf curves": 4.0,
-        "intensity-duration-frequency": 4.0,
-        "synoptic weather": 4.0,
-        "synoptic patterns": 4.0,
-        # Modeling datasets & initiatives
-        "euro-cordex": 4.0,
-        "na-cordex": 4.0,
-        "cordex": 3.0,
-        "cmip6": 4.0,
+        "hydrology": 3.0,
+        "hydrological": 3.0,
+        "geoscience": 3.0,
+        "geophysical": 3.0,
+        "extreme precipitation": 5.0,
+        "extreme events": 4.0,
+        "flash flood": 5.0,
+        "storm surge": 4.0,
+        "drought": 3.0,
+        "cordex": 4.0,
+        "cmip6": 5.0,
         "gcm": 3.0,
-        "gcms": 3.0,
-        # Machine Learning indicators
+        "sea ice": 4.0,
+        "arctic": 3.0,
+        "antarctic": 3.0,
+        "tropical cyclone": 5.0,
+        "hurricane": 4.0,
+        "air quality": 4.0,
+        "aerosol": 3.0,
         "deep learning": 1.0,
         "machine learning": 1.0,
         "neural network": 1.0,
-        "neural networks": 1.0,
-        "perfect prognosis": 4.0,
-        "k-means clustering": 3.0,
-        "cluster analysis": 3.0,
-        "principal component analysis": 2.5,
-        "bayesian network": 3.0,
     }
 
     for keyword, points in positives.items():
         if keyword in title_lower:
-            score += points * 2.0  # title matches are more significant
-        if keyword in summary_lower:
+            score += points * 2.0
+        elif keyword in summary_lower:
             score += points
 
-    # Threshold for relevance
-    # A paper must gather at least 4.0 points to be considered geoscience-relevant.
-    return score >= 4.0
+    return score >= 5.0
 
 
 def get_weekly_papers() -> List[Dict[str, Any]]:
     """
-    Run search queries for all topics and aggregate results.
+    Fetch and filter relevant geoscience papers from arXiv RSS feeds.
 
-    Queries arXiv for each of the 5 geoscience topics, classifies the papers,
-    deduplicates them, and returns a unified list sorted by publication date.
+    Reads the daily RSS feeds for physics.ao-ph, physics.geo-ph, and cs.LG,
+    filters them by geoscience relevance, classifies them by topic, and
+    returns a balanced set (up to MAX_PER_CATEGORY per topic).
 
     Returns
     -------
     list[dict[str, Any]]
-        Deduplicated list of categorized research papers.
+        A balanced, deduplicated list of categorized research papers.
     """
-    category_filter: str = (
-        "(cat:physics.ao-ph OR cat:physics.geo-ph OR cat:cs.LG OR cat:stat.ML)"
-    )
-
-    ml_filter: str = (
-        '("deep learning" OR "machine learning" OR '
-        '"neural network" OR "neural networks")'
-    )
-
-    # 1. Weather forecasting query
-    q_weather: str = (
-        f"{category_filter} AND "
-        '("weather forecasting" OR "numerical weather prediction" OR '
-        '"weather forecast") '
-        f"AND {ml_filter}"
-    )
-    # 2. S2S forecasting query
-    q_s2s: str = (
-        f"{category_filter} AND "
-        '("subseasonal" OR "seasonal forecast" OR "s2s") '
-        f"AND {ml_filter}"
-    )
-    # 3. Climate emulation query
-    q_emulation: str = (
-        f"{category_filter} AND "
-        '("climate emulation" OR "climate emulator" OR "model emulator") '
-        f"AND {ml_filter}"
-    )
-    # 4. Data Assimilation query
-    q_assimilation: str = (
-        f"{category_filter} AND " f'"data assimilation" AND {ml_filter}'
-    )
-    # 5. Downscaling query
-    q_downscaling: str = f"{category_filter} AND " f'"downscaling" AND {ml_filter}'
-
-    queries: Dict[str, str] = {
-        "Weather Forecasting": q_weather,
-        "Subseasonal to Seasonal Forecasting": q_s2s,
-        "Climate Emulation": q_emulation,
-        "Data Assimilation": q_assimilation,
-        "Downscaling": q_downscaling,
-    }
-
     all_papers_map: Dict[str, Dict[str, Any]] = {}
 
-    for default_category, query in queries.items():
-        print(f"Fetching papers for query: {query}")
-        fetched: List[Dict[str, Any]] = fetch_arxiv_papers(query, max_results=10)
+    for feed_url in RSS_FEEDS:
+        print(f"Fetching RSS feed: {feed_url}")
+        xml_content: Optional[str] = fetch_rss_feed(feed_url)
+        if not xml_content:
+            continue
 
-        for paper in fetched:
-            # Check relevance to weather and climate
-            if not is_relevant_geoscience(paper["title"], paper["summary"]):
-                print(f"Skipping unrelated paper: {paper['title']}")
+        items: List[Dict[str, Any]] = parse_rss_items(xml_content)
+        print(f"  Found {len(items)} items in feed")
+
+        for paper in items:
+            paper_id: str = paper["id"]
+            if paper_id in all_papers_map:
+                continue  # Already seen (cross-listed)
+
+            title: str = paper["title"]
+            summary: str = paper["summary"]
+
+            if not is_relevant_geoscience(title, summary):
                 continue
 
-            # Let's perform refined classification based on content
-            cat: str = categorize_paper(paper["title"], paper["summary"])
-            # If the refined category gets 0 score, fallback to default_category
-            title_summary_lower: str = (paper["title"] + " " + paper["summary"]).lower()
-            if cat == "Weather Forecasting" and "weather" not in title_summary_lower:
-                cat = default_category
+            cat: str = categorize_paper(title, summary)
 
-            paper_id: str = paper["id"]
-            if paper_id not in all_papers_map:
-                # Structure the post like a blog post
-                all_papers_map[paper_id] = {
-                    "id": paper_id.split("/abs/")[-1].replace("/", "_"),
-                    "title": paper["title"],
-                    "summary": (
-                        paper["summary"][:350] + "..."
-                        if len(paper["summary"]) > 350
-                        else paper["summary"]
-                    ),
-                    "full_content": paper["summary"],
-                    "authors": paper["authors"],
-                    "link": paper["link"],
-                    "date": paper["published"][:10],  # YYYY-MM-DD
-                    "category": cat,
-                    "type": "paper",
-                }
-        # Sleep to comply with arXiv API etiquette
-        time.sleep(4)
+            all_papers_map[paper_id] = {
+                "id": paper_id.split("/abs/")[-1].replace("/", "_"),
+                "title": title,
+                "summary": summary[:400] + "..." if len(summary) > 400 else summary,
+                "full_content": summary,
+                "authors": paper["authors"],
+                "link": paper["link"],
+                "date": paper["published"],
+                "category": cat,
+                "type": "paper",
+            }
 
-    # Convert map to list and sort by date descending
-    result_list: List[Dict[str, Any]] = list(all_papers_map.values())
+        # Small delay between feeds to be polite
+        time.sleep(1.0)
+
+    # Balance: cap at MAX_PER_CATEGORY per topic
+    from collections import defaultdict
+
+    per_category: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    for paper in all_papers_map.values():
+        per_category[paper["category"]].append(paper)
+
+    result_list: List[Dict[str, Any]] = []
+    for cat in TOPICS:
+        bucket = per_category.get(cat, [])
+        # Sort by date descending, take top N
+        bucket.sort(key=lambda x: x["date"], reverse=True)
+        result_list.extend(bucket[:MAX_PER_CATEGORY])
+
     result_list.sort(key=lambda x: x["date"], reverse=True)
     return result_list
 
 
 if __name__ == "__main__":
-    # Test script directly
     papers_list: List[Dict[str, Any]] = get_weekly_papers()
-    print(f"Successfully fetched {len(papers_list)} papers from arXiv.")
+    print(f"\nSuccessfully fetched {len(papers_list)} papers from arXiv RSS feeds.")
+    from collections import Counter
+
+    cat_counts = Counter(p["category"] for p in papers_list)
+    for cat, count in sorted(cat_counts.items()):
+        print(f"  {cat}: {count}")

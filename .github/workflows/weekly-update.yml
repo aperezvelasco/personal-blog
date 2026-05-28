@@ -24,6 +24,8 @@ jobs:
           cache-key: pixi-cache-v1
 
       - name: Run Paper Compiler
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           export PYTHONPATH="."
           pixi run -e dev compile

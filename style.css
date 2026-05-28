@@ -223,6 +223,12 @@ button {
   background-color: var(--bg-primary);
 }
 
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 /* Glass Header & Navbar */
 .navbar {
   position: fixed;
@@ -1514,6 +1520,17 @@ button {
 .modal-footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.abstract-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 8px !important;
 }
 
 /* Footer styling */

@@ -158,10 +158,46 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
+   * Render markdown text to basic HTML (headers, bold, italic, code, lists)
+   */
+  function simpleMarkdownToHtml(md) {
+    if (!md) return "";
+    let html = md
+      // Fenced code blocks (```lang\n...\n```)
+      .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+        const cls = lang ? ` class="language-${lang}"` : "";
+        return `<pre><code${cls}>${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>`;
+      })
+      // Headers
+      .replace(/^### (.+)$/gm, "<h3>$1</h3>")
+      .replace(/^## (.+)$/gm, "<h2>$1</h2>")
+      .replace(/^# (.+)$/gm, "<h1>$1</h1>")
+      // Bold & italic
+      .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.+?)\*/g, "<em>$1</em>")
+      // Horizontal rules
+      .replace(/^---$/gm, "<hr>")
+      // Unordered lists
+      .replace(/^[*-] (.+)$/gm, "<li>$1</li>")
+      // Numbered lists
+      .replace(/^\d+\. (.+)$/gm, "<li>$1</li>")
+      // Paragraphs from blank lines
+      .replace(/\n\n/g, "</p><p>")
+      // Inline code
+      .replace(/`([^`]+)`/g, "<code>$1</code>");
+
+    // Wrap consecutive <li> in <ul>
+    html = html.replace(/(<li>.*<\/li>)/gs, (m) => `<ul>${m}</ul>`);
+    return `<p>${html}</p>`;
+  }
+
+  /**
    * Modal logic
    */
   function openModal(post) {
     const isBlog = post.type === "blog";
+    const isPaper = post.type === "paper";
     const authorsList = post.authors
       ? post.authors.join(", ")
       : "Antonio Pérez Velasco";
@@ -172,6 +208,22 @@ document.addEventListener("DOMContentLoaded", () => {
         ? "Read Full Article"
         : "View on arXiv <i class='fa-solid fa-arrow-up-right-from-square'></i>";
       footerBtn = `<a href="${post.link}" target="_blank" rel="noopener" class="btn btn-primary">${btnText}</a>`;
+    }
+
+    // For papers: show explanation if available, with a toggle for the raw abstract
+    let bodyContent = "";
+    let toggleBtn = "";
+    if (isBlog) {
+      bodyContent = post.full_content;
+    } else if (isPaper && post.explanation) {
+      bodyContent = `<div id="modal-explanation">${simpleMarkdownToHtml(post.explanation)}</div>`;
+      const rawAbstract = `<div id="modal-abstract"><p class="abstract-label"><strong>Original Abstract</strong></p><p>${post.full_content}</p></div>`;
+      toggleBtn = `<button id="modal-toggle-btn" class="btn btn-secondary btn-sm" data-view="explanation">
+        <i class="fa-solid fa-book-open"></i> View Abstract
+      </button>`;
+      bodyContent += rawAbstract;
+    } else {
+      bodyContent = `<p>${post.full_content}</p>`;
     }
 
     modalBody.innerHTML = `
@@ -187,12 +239,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             </div>
             <div class="modal-body-content">
-                ${isBlog ? post.full_content : `<p>${post.full_content}</p>`}
+                ${bodyContent}
             </div>
             <div class="modal-footer">
+                ${toggleBtn}
                 ${footerBtn}
             </div>
         `;
+
+    // Wire up the explanation/abstract toggle
+    if (isPaper && post.explanation) {
+      const toggleBtnEl = document.getElementById("modal-toggle-btn");
+      const explanationEl = document.getElementById("modal-explanation");
+      const abstractEl = document.getElementById("modal-abstract");
+      if (abstractEl) abstractEl.style.display = "none";
+
+      if (toggleBtnEl) {
+        toggleBtnEl.addEventListener("click", () => {
+          const view = toggleBtnEl.getAttribute("data-view");
+          if (view === "explanation") {
+            explanationEl.style.display = "none";
+            abstractEl.style.display = "block";
+            toggleBtnEl.setAttribute("data-view", "abstract");
+            toggleBtnEl.innerHTML =
+              '<i class="fa-solid fa-wand-magic-sparkles"></i> View Explanation';
+          } else {
+            explanationEl.style.display = "block";
+            abstractEl.style.display = "none";
+            toggleBtnEl.setAttribute("data-view", "explanation");
+            toggleBtnEl.innerHTML =
+              '<i class="fa-solid fa-book-open"></i> View Abstract';
+          }
+        });
+      }
+    }
 
     postModal.classList.add("open");
     postModal.setAttribute("aria-hidden", "false");
