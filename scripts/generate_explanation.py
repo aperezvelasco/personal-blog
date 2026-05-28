@@ -23,10 +23,10 @@ from typing import Any, Dict, List, Optional, Tuple
 # lighter model → lower token cost / rate limits
 _MODEL_ID = "gemini-2.0-flash-lite"
 
-# Concise prompt to minimise token usage on free tier
+# Detailed prompt to generate long, high-quality reads
 _EXPLANATION_PROMPT = """\
 You are a science communicator.
-Write a plain-language blog post (3–5 min read)
+Write a plain-language blog post (5–10 min read)
 explaining this arXiv paper to a non-expert reader.
 
 Title: {title}
@@ -39,7 +39,7 @@ Rules:
 - Include one Mermaid diagram (```mermaid```) if helpful.
 - End with "## Key Takeaways" bullet list (3–5 bullets).
 - No YAML front matter. No opening "Here is...". Start directly.
-- ~400 words.
+- ~1000 words.
 """
 
 # Delay between consecutive API calls (free tier: 15 RPM → 4s min)
@@ -179,7 +179,7 @@ def _generate_via_sdk(api_key: str, prompt: str) -> Optional[str]:
                 contents=prompt,
                 config=genai_types.GenerateContentConfig(
                     temperature=0.7,
-                    max_output_tokens=800,
+                    max_output_tokens=4000,
                 ),
             )
             return response.text

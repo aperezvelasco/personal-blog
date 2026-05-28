@@ -5,10 +5,10 @@ Use this skill whenever the user requests to manually add a new scientific paper
 ## Requirements
 
 1. **Write a Plain-Language Explanation**:
-   Generate an educational, jargon-free 3-5 minute read explaining the paper to a non-expert.
+   Generate an educational, jargon-free 5-10 minute read explaining the paper to a non-expert.
    - **Structure**: Introductory hook -> The core problem -> The model/approach -> Key results and benchmarks -> "## Key Takeaways" bullet list (3-5 bullets).
    - **Visuals**: Include one detailed Mermaid diagram representing the architecture or workflow of the model.
-   - **Length**: ~400 words.
+   - **Length**: ~1000 words.
    - **Style**: Science communicator tone. Avoid using prefixes like "Didactic Breakdown:".
 
 2. **Run `scripts/add_paper.py`**:
