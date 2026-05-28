@@ -7,7 +7,6 @@ version = "0.1.0"
 
 [tasks]
 compile = { cmd = "python scripts/compile_blog.py" }
-scheduler = { cmd = "python scripts/scheduler.py" }
 
 [environments]
 dev = ["default"]

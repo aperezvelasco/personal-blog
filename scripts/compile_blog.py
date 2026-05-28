@@ -17,8 +17,6 @@ import markdown
 
 # Ensure current directory is in python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from fetch_papers import get_weekly_papers
-from generate_explanation import enrich_papers_with_explanations
 
 
 def parse_markdown_posts(content_dir: str) -> List[Dict[str, Any]]:
@@ -101,11 +99,11 @@ def load_cached_papers(output_file: str) -> List[Dict[str, Any]]:
 
 def compile_all_posts() -> None:
     """
-    Orchestrate fetching arXiv papers and parsing manual blog posts.
+    Orchestrate parsing manual blog posts and merging with manually added papers.
 
-    Combines both sets of posts, optionally enriches paper entries with
-    AI-generated plain-language explanations (if GEMINI_API_KEY is set),
-    sorts them chronologically in descending order, and saves the resulting
+    Combines manual posts from the content directory with the existing
+    manually added paper entries in data/posts.json, sorts them
+    chronologically in descending order, and saves the resulting
     array into 'data/posts.json'.
     """
     project_root: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -121,58 +119,30 @@ def compile_all_posts() -> None:
     manual_posts: List[Dict[str, Any]] = parse_markdown_posts(content_dir)
     print(f"Found {len(manual_posts)} manual blog posts.")
 
-    # --- 2. Fetch papers from arXiv RSS ---
-    print("\nFetching weekly papers from arXiv RSS feeds...")
-    papers: List[Dict[str, Any]] = get_weekly_papers()
-    print(f"Successfully fetched {len(papers)} papers.")
+    # --- 2. Load cached papers ---
+    print("\nLoading manually added papers...")
+    papers: List[Dict[str, Any]] = load_cached_papers(output_file)
+    print(f"Found {len(papers)} papers.")
 
-    # Load cached papers if fetch returned nothing
-    if not papers:
-        print("arXiv RSS returned no papers. Restoring cached papers...")
-        papers = load_cached_papers(output_file)
-        if papers:
-            print(f"Restored {len(papers)} cached papers.")
+    # --- 3. Combine and sort all posts ---
+    all_posts: List[Dict[str, Any]] = manual_posts + papers
+    all_posts.sort(key=lambda x: x.get("date", ""), reverse=True)
 
-    # --- 3. Merge with cached papers (accumulate history) ---
-    # Build index of existing papers to preserve their explanations
-    cached_map: Dict[str, Dict[str, Any]] = {}
-    for p in load_cached_papers(output_file):
-        cached_map[p.get("id", "")] = p
-
-    # Merge newly fetched papers into the cached set
-    for paper in papers:
-        pid = paper.get("id", "")
-        if pid in cached_map:
-            # Carry forward existing explanation if present
-            if cached_map[pid].get("explanation"):
-                paper["explanation"] = cached_map[pid]["explanation"]
-        cached_map[pid] = paper
-
-    merged_papers: List[Dict[str, Any]] = list(cached_map.values())
-
-    # --- 4. Generate plain-language explanations via Gemini ---
-    print("\nGenerating plain-language explanations for papers...")
-    merged_papers = enrich_papers_with_explanations(merged_papers)
-
-    # --- 5. Combine and sort all posts ---
-    all_posts: List[Dict[str, Any]] = manual_posts + merged_papers
-    all_posts.sort(key=lambda x: x["date"], reverse=True)
-
-    # --- 6. Save to file ---
+    # --- 4. Save to file ---
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(all_posts, f, indent=2, ensure_ascii=False)
         f.write("\n")
 
     print(
         f"\n✓ Blog compiled successfully. Total posts: {len(all_posts)} "
-        f"({len(manual_posts)} manual + {len(merged_papers)} papers). "
+        f"({len(manual_posts)} manual + {len(papers)} papers). "
         f"Saved to {output_file}"
     )
 
     # Print category breakdown
     from collections import Counter
 
-    cat_counts: Counter = Counter(p.get("category", "?") for p in merged_papers)
+    cat_counts: Counter = Counter(p.get("category", "?") for p in papers)
     print("\nPaper category breakdown:")
     for cat, count in sorted(cat_counts.items()):
         print(f"  {cat}: {count}")
